@@ -8,17 +8,18 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-public class HitController {
+public class StatController {
     private final StatService statService;
 
     @PostMapping(value = "/hit")
     @ResponseStatus(HttpStatus.CREATED)
-    public void registerRequest(@RequestBody RequestRegisterDto requestRegisterDto) {
+    public void registerRequest(@Valid @RequestBody RequestRegisterDto requestRegisterDto) {
         statService.registerRequest(requestRegisterDto);
     }
 
