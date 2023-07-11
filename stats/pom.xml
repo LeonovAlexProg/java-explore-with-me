@@ -10,12 +10,12 @@
     </parent>
 
     <groupId>com.leonovalexprog</groupId>
-    <artifactId>statistic-system</artifactId>
+    <artifactId>stats</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>web</module>
-        <module>common-dto</module>
-        <module>service</module>
+        <module>stats-client</module>
+        <module>stats-dto</module>
+        <module>stats-server</module>
     </modules>
 
     <properties>
@@ -23,5 +23,12 @@
         <maven.compiler.target>11</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>

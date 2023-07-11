@@ -4,6 +4,7 @@ import com.leonovalexprog.dto.RequestRegisterDto;
 import com.leonovalexprog.dto.RequestResponseDto;
 import com.leonovalexprog.service.StatService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,22 +13,21 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/hit")
 public class HitController {
     private final StatService statService;
 
-    @PostMapping
+    @PostMapping(value = "/hit")
     @ResponseStatus(HttpStatus.CREATED)
     public void registerRequest(@RequestBody RequestRegisterDto requestRegisterDto) {
         statService.registerRequest(requestRegisterDto);
     }
 
-    @GetMapping
+    @GetMapping(value = "/stats")
     @ResponseStatus(HttpStatus.OK)
-    public List<RequestResponseDto> getStatistic(@RequestParam LocalDateTime start,
-                                                 @RequestParam LocalDateTime end,
-                                                 @RequestParam List<String> uris,
-                                                 @RequestParam Boolean unique) {
-        return statService.getRequestStat(start, end, uris, unique);
+    public List<RequestResponseDto> getStatistic(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime start,
+                                                 @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime end,
+                                                 @RequestParam(required = false) List<String> uris,
+                                                 @RequestParam(required = false, defaultValue = "false") Boolean unique) {
+        return statService.getRequestsStat(start, end, uris, unique);
     }
 }

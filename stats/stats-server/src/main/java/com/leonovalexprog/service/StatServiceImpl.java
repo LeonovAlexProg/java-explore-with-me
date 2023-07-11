@@ -2,6 +2,7 @@ package com.leonovalexprog.service;
 
 import com.leonovalexprog.dto.RequestRegisterDto;
 import com.leonovalexprog.dto.RequestResponseDto;
+import com.leonovalexprog.mapper.RequestMapper;
 import com.leonovalexprog.model.Request;
 import com.leonovalexprog.repository.RequestRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +28,18 @@ public class StatServiceImpl implements StatService {
     }
 
     @Override
-    public List<RequestResponseDto> getRequestStat(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
-        return null;
+    public List<RequestResponseDto> getRequestsStat(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
+        List<Request> requests;
+        List<RequestResponseDto> responses;
+
+        if (uris == null || uris.isEmpty()) {
+            requests = repository.findByTimestamp(start, end);
+        } else {
+            requests = repository.findByTimestampAndUris(start, end, uris);
+        }
+
+        responses = RequestMapper.toResponse(requests, unique);
+
+        return responses;
     }
 }

@@ -9,5 +9,5 @@ import java.util.List;
 public interface StatService {
     void registerRequest(final RequestRegisterDto requestRegisterDto);
 
-    List<RequestResponseDto> getRequestStat(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique);
+    List<RequestResponseDto> getRequestsStat(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique);
 }
