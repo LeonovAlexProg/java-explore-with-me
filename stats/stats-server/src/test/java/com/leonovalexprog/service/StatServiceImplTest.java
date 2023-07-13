@@ -4,6 +4,7 @@ import com.leonovalexprog.dto.RequestRegisterDto;
 import com.leonovalexprog.dto.RequestResponseDto;
 import com.leonovalexprog.model.Request;
 import com.leonovalexprog.repository.RequestRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -79,7 +80,8 @@ class StatServiceUnitTest {
                 .thenReturn(List.of(request));
 
         expectedList = List.of(responseDto);
-        actualList = service.getRequestsStat()
+        actualList = service.getRequestsStat(datetime.minusDays(100), datetime.plusDays(100), null, false);
 
+        Assertions.assertEquals(expectedList, actualList);
     }
 }
