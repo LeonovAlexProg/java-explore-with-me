@@ -1,15 +1,21 @@
 package com.leonovalexprog.client;
 
+import com.leonovalexprog.StatApplication;
 import com.leonovalexprog.dto.RequestRegisterDto;
 import com.leonovalexprog.dto.RequestResponseDto;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+//TODO разобраться с контекстом для тестирования клиента (не поднимается)
+@SpringBootTest(classes = StatApplication.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class StatsClientTest {
     private final StatsClient statsClient = new StatsClient("http://localhost:8080");
 
