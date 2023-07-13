@@ -16,11 +16,11 @@ public class RequestMapper {
 
         if (!isUnique) {
             responses = requestsByUri.keySet().stream()
-                    .map(key -> new RequestResponseDto("ewm-main-service", key, requestsByUri.get(key).size()))
+                    .map(key -> new RequestResponseDto(requestsByUri.get(key).get(0).getApplication(), key, requestsByUri.get(key).size()))
                     .collect(Collectors.toList());
         } else {
             responses = requestsByUri.keySet().stream()
-                    .map(key -> new RequestResponseDto("ewm-main-service", key, (int) requestsByUri.get(key).stream()
+                    .map(key -> new RequestResponseDto(requestsByUri.get(key).get(0).getApplication(), key, (int) requestsByUri.get(key).stream()
                             .map(Request::getIp)
                             .distinct()
                             .count()))
