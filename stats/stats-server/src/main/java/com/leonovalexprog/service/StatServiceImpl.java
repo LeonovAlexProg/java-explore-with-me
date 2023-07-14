@@ -21,7 +21,7 @@ public class StatServiceImpl implements StatService {
                 .application(requestRegisterDto.getApp())
                 .uri(requestRegisterDto.getUri())
                 .ip(requestRegisterDto.getIp())
-                .timestamp(requestRegisterDto.getTimestamp())
+                .datetime(requestRegisterDto.getDatetime())
                 .build();
 
         repository.save(newRequest);
@@ -33,9 +33,9 @@ public class StatServiceImpl implements StatService {
         List<RequestResponseDto> responses;
 
         if (uris == null || uris.isEmpty()) {
-            requests = repository.findByTimestamp(start, end);
+            requests = repository.findByDatetime(start, end);
         } else {
-            requests = repository.findByTimestampAndUris(start, end, uris);
+            requests = repository.findByDatetimeAndUris(start, end, uris);
         }
 
         responses = RequestMapper.toResponse(requests, unique);

@@ -32,7 +32,7 @@ class StatServiceUnitTest {
                 .app("test-app")
                 .uri("/test")
                 .ip("255.255.255.255")
-                .timestamp(LocalDateTime.now())
+                .datetime(LocalDateTime.now())
                 .build();
     }
 
@@ -42,7 +42,7 @@ class StatServiceUnitTest {
                 .application(requestDto.getApp())
                 .uri(requestDto.getUri())
                 .ip(requestDto.getIp())
-                .timestamp(requestDto.getTimestamp())
+                .datetime(requestDto.getDatetime())
                 .build();
 
         Mockito
@@ -67,7 +67,7 @@ class StatServiceUnitTest {
                 .application(requestDto.getApp())
                 .uri(requestDto.getUri())
                 .ip(requestDto.getIp())
-                .timestamp(datetime)
+                .datetime(datetime)
                 .build();
         RequestResponseDto responseDto = RequestResponseDto.builder()
                 .app(requestDto.getApp())
@@ -76,7 +76,7 @@ class StatServiceUnitTest {
                 .build();
 
         Mockito
-                .when(repository.findByTimestamp(datetime.minusDays(100), datetime.plusDays(100)))
+                .when(repository.findByDatetime(datetime.minusDays(100), datetime.plusDays(100)))
                 .thenReturn(List.of(request));
 
         expectedList = List.of(responseDto);

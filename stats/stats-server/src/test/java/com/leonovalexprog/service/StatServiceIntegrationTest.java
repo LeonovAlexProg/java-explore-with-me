@@ -37,7 +37,7 @@ class StatServiceIntegrationTest {
                 .app("test-app")
                 .uri("/test")
                 .ip("255.255.255.255")
-                .timestamp(localDateTime)
+                .datetime(localDateTime)
                 .build();
     }
 
@@ -55,7 +55,7 @@ class StatServiceIntegrationTest {
                 .application(requestDto.getApp())
                 .uri(requestDto.getUri())
                 .ip(requestDto.getIp())
-                .timestamp(localDateTime)
+                .datetime(localDateTime)
                 .build();
 
         List<Request> responses = new ArrayList<>();

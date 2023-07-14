@@ -26,7 +26,7 @@ public class StatController {
                 requestRegisterDto.getApp(),
                 requestRegisterDto.getUri(),
                 requestRegisterDto.getIp(),
-                requestRegisterDto.getTimestamp());
+                requestRegisterDto.getDatetime());
         statService.registerRequest(requestRegisterDto);
     }
 

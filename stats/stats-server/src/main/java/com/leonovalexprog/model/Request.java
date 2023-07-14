@@ -29,5 +29,5 @@ public class Request {
     private String ip;
 
     @Column(nullable = false)
-    private LocalDateTime timestamp;
+    private LocalDateTime datetime;
 }

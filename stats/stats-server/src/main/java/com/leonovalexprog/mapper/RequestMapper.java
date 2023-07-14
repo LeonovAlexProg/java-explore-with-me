@@ -3,6 +3,7 @@ package com.leonovalexprog.mapper;
 import com.leonovalexprog.dto.RequestResponseDto;
 import com.leonovalexprog.model.Request;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -26,6 +27,8 @@ public class RequestMapper {
                             .count()))
                     .collect(Collectors.toList());
         }
+
+        responses.sort(Comparator.comparing(RequestResponseDto::getHits).reversed());
 
         return responses;
     }

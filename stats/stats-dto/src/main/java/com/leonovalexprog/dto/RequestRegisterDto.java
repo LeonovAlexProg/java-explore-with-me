@@ -1,6 +1,7 @@
 package com.leonovalexprog.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,7 +25,8 @@ public class RequestRegisterDto {
     @Size(min = 7, message = "Ip is too short")
     @Size(max = 15, message = "Ip is too long")
     private String ip;
+    @JsonProperty("timestamp")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @PastOrPresent(message = "Timestamp can't be in future")
-    private LocalDateTime timestamp;
+    private LocalDateTime datetime;
 }

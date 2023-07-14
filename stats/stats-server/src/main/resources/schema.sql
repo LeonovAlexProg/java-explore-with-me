@@ -3,5 +3,5 @@ CREATE TABLE IF NOT EXISTS requests (
     application varchar(50),
     uri varchar(50),
     ip varchar(20),
-    "timestamp" timestamp
+    datetime timestamp
 );
