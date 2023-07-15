@@ -1,17 +1,16 @@
 package com.leonovalexprog.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Table(name = "requests")
 @Builder
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Request {
@@ -30,4 +29,17 @@ public class Request {
 
     @Column(nullable = false)
     private LocalDateTime datetime;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Request request = (Request) o;
+        return Objects.equals(id, request.id) && Objects.equals(application, request.application) && Objects.equals(uri, request.uri) && Objects.equals(ip, request.ip) && Objects.equals(datetime, request.datetime);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, application, uri, ip, datetime);
+    }
 }
