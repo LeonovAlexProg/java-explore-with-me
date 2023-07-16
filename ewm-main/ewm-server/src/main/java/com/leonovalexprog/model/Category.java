@@ -1,0 +1,25 @@
+package com.leonovalexprog.model;
+
+import lombok.*;
+
+import javax.persistence.*;
+import java.util.List;
+
+@Entity
+@Table(name = "Categories")
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class Category {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, unique = true)
+    private String name;
+
+    @OneToMany
+    private List<Event> events;
+}
