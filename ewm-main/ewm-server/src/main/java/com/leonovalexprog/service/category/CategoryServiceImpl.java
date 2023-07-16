@@ -1,7 +1,7 @@
-package com.leonovalexprog.service.CategoriesService;
+package com.leonovalexprog.service.category;
 
-import com.leonovalexprog.CategoryDto;
-import com.leonovalexprog.NewCategoryDto;
+import com.leonovalexprog.dto.CategoryDto;
+import com.leonovalexprog.dto.NewCategoryDto;
 import com.leonovalexprog.exception.exceptions.ConditionsViolationException;
 import com.leonovalexprog.exception.exceptions.EntityNotExistsException;
 import com.leonovalexprog.exception.exceptions.NameExistsException;
@@ -11,11 +11,14 @@ import com.leonovalexprog.repository.CategoriesRepository;
 import com.leonovalexprog.repository.EventsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class CategoriesServiceImpl implements CategoriesService{
+public class CategoryServiceImpl implements CategoryService {
     private final CategoriesRepository categoriesRepository;
     private final EventsRepository eventsRepository;
     @Override
@@ -56,5 +59,24 @@ public class CategoriesServiceImpl implements CategoriesService{
         } catch (DataIntegrityViolationException exception) {
             throw new NameExistsException(exception.getMessage());
         }
+    }
+
+    @Override
+    public List<CategoryDto> getCategories(int from, int size) {
+        if (from < 0 || size < 0) {
+            throw new IllegalArgumentException("From and Size must be positive or zero");
+        }
+
+        List<Category> categories = categoriesRepository.findAll(PageRequest.of(from / size, size)).getContent();
+
+        return CategoryMapper.toDto(categories);
+    }
+
+    @Override
+    public CategoryDto getCategory(long catId) {
+        Category category = categoriesRepository.findById(catId)
+                .orElseThrow(() -> new EntityNotExistsException(String.format("Category with id=%d was not found", catId)));
+
+        return CategoryMapper.toDto(category);
     }
 }

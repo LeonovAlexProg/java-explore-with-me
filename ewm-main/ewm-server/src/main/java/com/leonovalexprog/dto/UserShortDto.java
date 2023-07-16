@@ -1,4 +1,4 @@
-package com.leonovalexprog;
+package com.leonovalexprog.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CategoryDto {
+public class UserShortDto {
     private Long id;
     private String name;
 }

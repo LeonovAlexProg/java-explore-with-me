@@ -1,11 +1,12 @@
-package com.leonovalexprog;
+package com.leonovalexprog.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 
 @Data
@@ -13,7 +14,8 @@ import javax.validation.constraints.NotEmpty;
 @AllArgsConstructor
 @NoArgsConstructor
 public class NewCategoryDto {
-    @NotBlank(message = "Name must not be blank")
     @NotEmpty(message = "Name is mandatory")
+    @Min(value = 1, message = "Name length must be greater then 0")
+    @Max(value = 50, message = "Name length must be shorter then 50")
     private String name;
 }

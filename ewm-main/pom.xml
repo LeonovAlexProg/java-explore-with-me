@@ -13,7 +13,6 @@
     <artifactId>ewm-main</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>ewm-dto</module>
         <module>ewm-server</module>
     </modules>
 
