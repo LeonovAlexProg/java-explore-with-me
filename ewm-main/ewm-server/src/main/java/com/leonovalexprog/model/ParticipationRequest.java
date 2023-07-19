@@ -32,7 +32,7 @@ public class ParticipationRequest {
 
     public enum Status {
         PENDING,
-        APPROVED,
+        CONFIRMED,
         REJECTED
     }
 

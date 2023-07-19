@@ -3,7 +3,7 @@ package com.leonovalexprog.service.user;
 import com.leonovalexprog.dto.NewUserRequest;
 import com.leonovalexprog.dto.UserDto;
 import com.leonovalexprog.exception.exceptions.EntityNotExistsException;
-import com.leonovalexprog.exception.exceptions.NameExistsException;
+import com.leonovalexprog.exception.exceptions.FieldValueExistsException;
 import com.leonovalexprog.mapper.UserMapper;
 import com.leonovalexprog.model.User;
 import com.leonovalexprog.repository.UserRepository;
@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService {
             User newUser = userRepository.saveAndFlush(user);
             return UserMapper.toDto(newUser);
         } catch (DataIntegrityViolationException exception) {
-            throw new NameExistsException(exception.getMessage());
+            throw new FieldValueExistsException(exception.getMessage());
         }
     }
 

@@ -4,7 +4,7 @@ import com.leonovalexprog.dto.*;
 import com.leonovalexprog.exception.exceptions.ConditionsViolationException;
 import com.leonovalexprog.exception.exceptions.DataValidationFailException;
 import com.leonovalexprog.exception.exceptions.EntityNotExistsException;
-import com.leonovalexprog.exception.exceptions.NameExistsException;
+import com.leonovalexprog.exception.exceptions.FieldValueExistsException;
 import com.leonovalexprog.mapper.EventMapper;
 import com.leonovalexprog.mapper.ParticipationRequestMapper;
 import com.leonovalexprog.model.*;
@@ -71,7 +71,7 @@ public class EventServiceImpl implements EventService {
             Event newEvent = eventsRepository.saveAndFlush(event);
             return EventMapper.toDto(newEvent);
         } catch (DataIntegrityViolationException exception) {
-            throw new NameExistsException(exception.getMessage());
+            throw new FieldValueExistsException(exception.getMessage());
         }
     }
 
@@ -103,14 +103,16 @@ public class EventServiceImpl implements EventService {
                     newEventDto.getEventDate());
         }
 
-        if (!userRepository.existsById(userId))
-            throw new EntityNotExistsException(String.format("User with id=%d was not found", userId));
 
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotExistsException(String.format("User with id=%d was not found", userId)));
         Event event = eventsRepository.findById(eventId)
                 .orElseThrow(() -> new EntityNotExistsException(String.format("Event with id=%d was not found", eventId)));
         Category category = categoryRepository.findById(newEventDto.getCategory().getId())
                 .orElseThrow(() -> new EntityNotExistsException(String.format("Category with id=%d was not found", newEventDto.getCategory().getId())));
 
+        if (!event.getInitiator().getId().equals(user.getId()))
+            throw new ConditionsViolationException("Only event initiator can update this event");
         if (event.getState().equals(Event.State.PENDING) || event.getState().equals(Event.State.CANCELED))
             throw new ConditionsViolationException("Only pending or canceled events can be changed");
 
@@ -125,7 +127,7 @@ public class EventServiceImpl implements EventService {
                     .build();
             Location newLocation = locationRepository.save(location);
 
-            event.setLocation(location);
+            event.setLocation(newLocation);
         }
         event.setPaid(newEventDto.getPaid());
         event.setParticipantLimit(newEventDto.getParticipantLimit());
@@ -141,7 +143,7 @@ public class EventServiceImpl implements EventService {
             Event newEvent = eventsRepository.saveAndFlush(event);
             return EventMapper.toDto(newEvent);
         } catch (DataIntegrityViolationException exception) {
-            throw new NameExistsException(exception.getMessage());
+            throw new FieldValueExistsException(exception.getMessage());
         }
     }
 

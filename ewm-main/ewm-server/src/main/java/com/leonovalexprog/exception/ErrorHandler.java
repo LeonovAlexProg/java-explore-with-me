@@ -3,7 +3,7 @@ package com.leonovalexprog.exception;
 import com.leonovalexprog.exception.exceptions.ConditionsViolationException;
 import com.leonovalexprog.exception.exceptions.DataValidationFailException;
 import com.leonovalexprog.exception.exceptions.EntityNotExistsException;
-import com.leonovalexprog.exception.exceptions.NameExistsException;
+import com.leonovalexprog.exception.exceptions.FieldValueExistsException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -22,7 +22,7 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse integrityConstraintViolation(final NameExistsException e) {
+    public ErrorResponse integrityConstraintViolation(final FieldValueExistsException e) {
         log.warn(e.getMessage());
         return new ErrorResponse(
               HttpStatus.CONFLICT.name(),

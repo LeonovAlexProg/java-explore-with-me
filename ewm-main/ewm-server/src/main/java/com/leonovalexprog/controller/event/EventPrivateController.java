@@ -57,7 +57,7 @@ public class EventPrivateController {
     }
 
     @PatchMapping("/{userId}/events/{eventId}/requests")
-    public List<ParticipationRequestDto> patchEventRequests(@PathVariable long userId,
+    public EventRequestStatusUpdateResult patchEventRequests(@PathVariable long userId,
                                                             @PathVariable long eventId,
                                                             @RequestBody EventRequestStatusUpdateRequest updateRequest) {
         log.info("Update event participation requests (user id = {}, event id = {}, requests = {}",

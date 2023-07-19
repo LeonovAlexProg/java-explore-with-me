@@ -4,7 +4,7 @@ import com.leonovalexprog.dto.CategoryDto;
 import com.leonovalexprog.dto.NewCategoryDto;
 import com.leonovalexprog.exception.exceptions.ConditionsViolationException;
 import com.leonovalexprog.exception.exceptions.EntityNotExistsException;
-import com.leonovalexprog.exception.exceptions.NameExistsException;
+import com.leonovalexprog.exception.exceptions.FieldValueExistsException;
 import com.leonovalexprog.mapper.CategoryMapper;
 import com.leonovalexprog.model.Category;
 import com.leonovalexprog.repository.CategoriesRepository;
@@ -31,7 +31,7 @@ public class CategoryServiceImpl implements CategoryService {
             Category newCategory = categoriesRepository.saveAndFlush(category);
             return CategoryMapper.toDto(newCategory);
         } catch (DataIntegrityViolationException exception) {
-            throw new NameExistsException(exception.getMessage());
+            throw new FieldValueExistsException(exception.getMessage());
         }
     }
 
@@ -57,7 +57,7 @@ public class CategoryServiceImpl implements CategoryService {
             Category newCategory = categoriesRepository.saveAndFlush(category);
             return CategoryMapper.toDto(newCategory);
         } catch (DataIntegrityViolationException exception) {
-            throw new NameExistsException(exception.getMessage());
+            throw new FieldValueExistsException(exception.getMessage());
         }
     }
 
