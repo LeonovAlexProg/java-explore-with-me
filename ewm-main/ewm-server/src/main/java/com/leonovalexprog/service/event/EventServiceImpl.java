@@ -1,16 +1,20 @@
 package com.leonovalexprog.service.event;
 
 import com.leonovalexprog.dto.EventDto;
+import com.leonovalexprog.dto.EventShortDto;
 import com.leonovalexprog.dto.NewEventDto;
 import com.leonovalexprog.exception.exceptions.DataValidationFailException;
 import com.leonovalexprog.exception.exceptions.EntityNotExistsException;
 import com.leonovalexprog.exception.exceptions.NameExistsException;
 import com.leonovalexprog.mapper.EventMapper;
+import com.leonovalexprog.mapper.LocationMapper;
 import com.leonovalexprog.model.Category;
 import com.leonovalexprog.model.Event;
+import com.leonovalexprog.model.Location;
 import com.leonovalexprog.model.User;
 import com.leonovalexprog.repository.CategoriesRepository;
 import com.leonovalexprog.repository.EventsRepository;
+import com.leonovalexprog.repository.LocationRepository;
 import com.leonovalexprog.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -18,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +30,7 @@ public class EventServiceImpl implements EventService {
     private final EventsRepository eventsRepository;
     private final UserRepository userRepository;
     private final CategoriesRepository categoryRepository;
+    private final LocationRepository locationRepository;
 
     @Override
     public EventDto newEvent(long userId, NewEventDto newEventDto) {
@@ -38,6 +44,13 @@ public class EventServiceImpl implements EventService {
         Category category = categoryRepository.findById(newEventDto.getCategory())
                 .orElseThrow(() -> new EntityNotExistsException(String.format("Category with id=%d was not found", newEventDto.getCategory())));
 
+        Location location = Location.builder()
+                .lat(newEventDto.getLocation().getLat())
+                .lon(newEventDto.getLocation().getLon())
+                .build();
+
+        Location newLocation = locationRepository.save(location);
+
 
         Event event = Event.builder()
                 .annotation(newEventDto.getAnnotation())
@@ -47,8 +60,7 @@ public class EventServiceImpl implements EventService {
                 .description(newEventDto.getDescription())
                 .eventDate(newEventDto.getEventDate())
                 .initiator(eventInitiator)
-                //TODO заготовка под будующую фичу локаций
-                //.location(null)
+                .location(newLocation)
                 .paid(newEventDto.getPaid())
                 .participantLimit(newEventDto.getParticipantLimit())
                 .publishedOn(null)
@@ -67,7 +79,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventDto getEvents(long userId, long from, long size) {
+    public List<EventShortDto> getEvents(long userId, long from, long size) {
         return null;
     }
 }

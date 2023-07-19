@@ -25,7 +25,7 @@ public class ParticipationRequest {
     private Event event;
 
     @OneToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "requester_id")
     private User requester;
 
     private Status status;
