@@ -19,4 +19,5 @@ public class RequestsPrivateController {
         log.info("Register for participation (user id = {}, event id = {})", userId, eventId);
         return requestService.newParticipation(userId, eventId);
     }
+
 }

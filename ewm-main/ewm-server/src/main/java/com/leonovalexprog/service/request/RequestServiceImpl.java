@@ -9,7 +9,7 @@ import com.leonovalexprog.model.Event;
 import com.leonovalexprog.model.ParticipationRequest;
 import com.leonovalexprog.model.User;
 import com.leonovalexprog.repository.EventsRepository;
-import com.leonovalexprog.repository.ParticipationRequestRepository;
+import com.leonovalexprog.repository.ParticipationRequestsRepository;
 import com.leonovalexprog.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 @Service
 @RequiredArgsConstructor
 public class RequestServiceImpl implements RequestService {
-    private final ParticipationRequestRepository requestRepository;
+    private final ParticipationRequestsRepository requestRepository;
     private final EventsRepository eventRepository;
     private final UserRepository userRepository;
 

@@ -1,9 +1,6 @@
 package com.leonovalexprog.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -12,6 +9,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "events")
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -20,6 +18,8 @@ public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private String annotation;
 
     @JoinColumn(name = "category_id")
     @ManyToOne
@@ -50,7 +50,7 @@ public class Event {
 
     private Boolean requestModeration;
 
-    private String state;
+    private State state;
 
     private String title;
 

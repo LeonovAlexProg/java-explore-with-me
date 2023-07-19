@@ -20,4 +20,12 @@ public class EventPrivateController {
         log.info("Add new event (userId = {}, event title = {})", userId, newEventDto.getTitle());
         return eventService.newEvent(userId, newEventDto);
     }
+
+    @GetMapping("/{userId}/events")
+    public EventDto getEvents(@PathVariable long userId,
+                              @RequestParam(defaultValue = "0") long from,
+                              @RequestParam(defaultValue = "10") long size) {
+        log.info("Get user events (user id = {}, from = {}, size = {})", userId, from, size);
+        return eventService.getEvents(userId, from, size);
+    }
 }

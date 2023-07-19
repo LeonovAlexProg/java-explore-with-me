@@ -1,6 +1,7 @@
 package com.leonovalexprog.mapper;
 
 import com.leonovalexprog.dto.UserDto;
+import com.leonovalexprog.dto.UserShortDto;
 import com.leonovalexprog.model.User;
 import lombok.experimental.UtilityClass;
 
@@ -21,5 +22,12 @@ public class UserMapper {
         return users.stream()
                 .map(UserMapper::toDto)
                 .collect(Collectors.toList());
+    }
+
+    public static UserShortDto toShortDto(User user) {
+        return UserShortDto.builder()
+                .id(user.getId())
+                .name(user.getName())
+                .build();
     }
 }

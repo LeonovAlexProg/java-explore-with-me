@@ -1,11 +1,13 @@
 package com.leonovalexprog.exception;
 
 import com.leonovalexprog.exception.exceptions.ConditionsViolationException;
+import com.leonovalexprog.exception.exceptions.DataValidationFailException;
 import com.leonovalexprog.exception.exceptions.EntityNotExistsException;
 import com.leonovalexprog.exception.exceptions.NameExistsException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -66,6 +68,32 @@ public class ErrorHandler {
 
         return new ErrorResponse(
                 HttpStatus.CONFLICT.name(),
+                "For the requested operation the conditions are not met.",
+                e.getMessage(),
+                LocalDateTime.now().format(DateTimeFormatter.ofPattern(datetimePattern))
+        );
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse missingServletRequestParameterHandler(final MissingServletRequestParameterException e) {
+        log.warn(e.getMessage());
+
+        return new ErrorResponse(
+                HttpStatus.BAD_REQUEST.name(),
+                "Missing request parameter",
+                e.getMessage(),
+                LocalDateTime.now().format(DateTimeFormatter.ofPattern(datetimePattern))
+        );
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ErrorResponse dataValidationFailHandler(final DataValidationFailException e) {
+        log.warn(e.getMessage());
+
+        return new ErrorResponse(
+                HttpStatus.FORBIDDEN.name(),
                 "For the requested operation the conditions are not met.",
                 e.getMessage(),
                 LocalDateTime.now().format(DateTimeFormatter.ofPattern(datetimePattern))

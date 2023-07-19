@@ -6,4 +6,6 @@ import com.leonovalexprog.dto.NewEventDto;
 public interface EventService {
 
     EventDto newEvent(long userId, NewEventDto newEventDto);
+
+    EventDto getEvents(long userId, long from, long size);
 }
