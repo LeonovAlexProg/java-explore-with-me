@@ -4,6 +4,9 @@ import com.leonovalexprog.dto.ParticipationRequestDto;
 import com.leonovalexprog.model.ParticipationRequest;
 import lombok.experimental.UtilityClass;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @UtilityClass
 public class ParticipationRequestMapper {
     public static ParticipationRequestDto toDto(ParticipationRequest participationRequest) {
@@ -14,5 +17,11 @@ public class ParticipationRequestMapper {
                 .status(participationRequest.getStatus())
                 .created(participationRequest.getCreated())
                 .build();
+    }
+
+    public static List<ParticipationRequestDto> toDto(List<ParticipationRequest> participationRequestList) {
+        return participationRequestList.stream()
+                .map(ParticipationRequestMapper::toDto)
+                .collect(Collectors.toList());
     }
 }

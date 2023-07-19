@@ -1,7 +1,6 @@
 package com.leonovalexprog.model;
 
 import lombok.*;
-import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -70,7 +69,9 @@ public class Event {
     public enum State {
         PENDING,
         PUBLISHED,
-        CANCELED
+        CANCELED,
+
+
     }
 
     @Override

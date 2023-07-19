@@ -1,5 +1,6 @@
 package com.leonovalexprog.service.request;
 
+import com.leonovalexprog.dto.EventRequestStatusUpdateRequest;
 import com.leonovalexprog.dto.ParticipationRequestDto;
 import com.leonovalexprog.exception.exceptions.ConditionsViolationException;
 import com.leonovalexprog.exception.exceptions.EntityNotExistsException;
@@ -16,6 +17,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -57,5 +59,10 @@ public class RequestServiceImpl implements RequestService {
         } catch (DataIntegrityViolationException exception) {
             throw new NameExistsException(exception.getMessage());
         }
+    }
+
+    @Override
+    public List<ParticipationRequestDto> updateEventRequests(long userId, long eventId, EventRequestStatusUpdateRequest updateRequest) {
+
     }
 }
