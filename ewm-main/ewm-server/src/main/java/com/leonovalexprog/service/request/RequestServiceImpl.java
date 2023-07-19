@@ -52,7 +52,7 @@ public class RequestServiceImpl implements RequestService {
                 .event(event)
                 .build();
 
-        if (!event.getRequestModeration())
+        if (!event.getRequestModeration() || event.getParticipantLimit().equals(0L))
             participationRequest.setStatus(ParticipationRequest.Status.CONFIRMED);
 
         try {
