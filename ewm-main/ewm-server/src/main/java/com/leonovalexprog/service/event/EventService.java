@@ -2,6 +2,7 @@ package com.leonovalexprog.service.event;
 
 import com.leonovalexprog.dto.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface EventService {
@@ -15,4 +16,8 @@ public interface EventService {
     EventDto updateEvent(long userId, long eventId, UpdateEventUserRequest newEventData);
 
     List<ParticipationRequestDto> getEventRequests(long userId, long eventId);
+
+    List<EventDto> getEventsByAdmin(List<Long> users, List<String> states, List<Long> categories, LocalDateTime rangeStart, LocalDateTime rangeEnd, int from, int size);
+
+    EventDto updateEventAdmin(long eventId, UpdateEventAdminRequest updateDto);
 }

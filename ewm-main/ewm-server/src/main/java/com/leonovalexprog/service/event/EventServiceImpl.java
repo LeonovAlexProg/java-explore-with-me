@@ -15,11 +15,14 @@ import com.leonovalexprog.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -120,10 +123,10 @@ public class EventServiceImpl implements EventService {
         event.setCategory(category);
         event.setDescription(newEventDto.getDescription());
         event.setEventDate(newEventDto.getEventDate());
-        if (!locationRepository.existsByLatAndLon(newEventDto.getLocationDto().getLat(), newEventDto.getLocationDto().getLon())) {
+        if (!locationRepository.existsByLatAndLon(newEventDto.getLocation().getLat(), newEventDto.getLocation().getLon())) {
             Location location = Location.builder()
-                    .lat(newEventDto.getLocationDto().getLat())
-                    .lon(newEventDto.getLocationDto().getLon())
+                    .lat(newEventDto.getLocation().getLat())
+                    .lon(newEventDto.getLocation().getLon())
                     .build();
             Location newLocation = locationRepository.save(location);
 
@@ -159,5 +162,66 @@ public class EventServiceImpl implements EventService {
         return ParticipationRequestMapper.toDto(eventRequests);
     }
 
+    @Override
+    public List<EventDto> getEventsByAdmin(List<Long> users, List<String> states, List<Long> categories, LocalDateTime rangeStart, LocalDateTime rangeEnd, int from, int size) {
+        List<Event> events;
+        List<String> searchingStates;
 
+        Pageable pageable = PageRequest.of(from / size, size);
+
+        if (categories != null) {
+            searchingStates = Arrays.stream(Event.State.values())
+                    .map(Enum::toString)
+                    .filter(states::contains)
+                    .collect(Collectors.toList());
+        } else {
+            searchingStates = Arrays.stream(Event.State.values())
+                    .map(Enum::toString)
+                    .collect(Collectors.toList());
+        }
+
+        if (users != null && categories != null) {
+            if (rangeStart != null && rangeEnd != null) {
+                events = eventsRepository.findByUsersAndCategoriesWithTimestamp(users, categories, searchingStates, rangeStart, rangeEnd, pageable);
+            } else {
+                events = eventsRepository.findByUsersAndCategories(users, categories, searchingStates, pageable);
+            }
+        } else if (users != null) {
+            if (rangeStart != null && rangeEnd != null) {
+                events = eventsRepository.findByUsersWithTimestamp(users, searchingStates, rangeStart, rangeEnd, pageable);
+            } else {
+                events = eventsRepository.findByUsers(users, searchingStates, pageable);
+            }
+        } else if (categories != null) {
+            if (rangeStart != null && rangeEnd != null) {
+                events = eventsRepository.findByCategoriesWithTimestamp(categories, searchingStates, rangeStart, rangeEnd, pageable);
+            } else {
+                events = eventsRepository.findByCategories(categories, searchingStates, pageable);
+            }
+        } else {
+            if (rangeStart != null && rangeEnd != null) {
+                events = eventsRepository.findWithTimestamp(searchingStates, rangeStart, rangeEnd, pageable);
+            } else {
+                events = eventsRepository.findByStates(searchingStates, pageable);
+            }
+        }
+
+        return EventMapper.toDto(events);
+    }
+
+    @Override
+    public EventDto updateEventAdmin(long eventId, UpdateEventAdminRequest updateDto) {
+        if (updateDto.getEventDate().isBefore(LocalDateTime.now().plusHours(2))) {
+            throw new DataValidationFailException("Field: eventDate. Error: должно содержать дату, которая еще не наступила. Value: " +
+                    updateDto.getEventDate());
+        }
+
+        Event event = eventsRepository.findById(eventId)
+                .orElseThrow(() -> new EntityNotExistsException(String.format("Event with id=%d was not found", eventId)));
+
+        if (event.getState().equals(Event.State.PENDING) || event.getState().equals(Event.State.CANCELED))
+            throw new ConditionsViolationException("Only pending or canceled events can be changed");
+
+
+    }
 }

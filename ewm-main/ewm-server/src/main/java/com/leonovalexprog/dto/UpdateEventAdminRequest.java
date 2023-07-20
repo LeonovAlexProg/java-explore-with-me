@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UpdateEventUserRequest {
+public class UpdateEventAdminRequest {
     private String annotation;
     private CategoryDto category;
     private String description;
@@ -22,11 +22,11 @@ public class UpdateEventUserRequest {
     private Boolean paid;
     private Long participantLimit;
     private Boolean requestModeration;
-    private StateAction stateAction;
+    private UpdateEventAdminRequest.StateAction stateAction;
     private String title;
 
     public enum StateAction {
-        SEND_TO_REVIEW,
-        CANSEL_REVIEW
+        PUBLISH_EVENT,
+        REJECT_EVENT
     }
 }

@@ -32,6 +32,12 @@ public class EventMapper {
                 .build();
     }
 
+    public static List<EventDto> toDto(List<Event> events) {
+        return events.stream()
+                .map(EventMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
     public static EventShortDto toShortDto(Event event) {
         return EventShortDto.builder()
                 .annotation(event.getAnnotation())
