@@ -211,17 +211,55 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public EventDto updateEventAdmin(long eventId, UpdateEventAdminRequest updateDto) {
-        if (updateDto.getEventDate().isBefore(LocalDateTime.now().plusHours(2))) {
-            throw new DataValidationFailException("Field: eventDate. Error: должно содержать дату, которая еще не наступила. Value: " +
-                    updateDto.getEventDate());
-        }
-
         Event event = eventsRepository.findById(eventId)
                 .orElseThrow(() -> new EntityNotExistsException(String.format("Event with id=%d was not found", eventId)));
 
         if (event.getState().equals(Event.State.PENDING) || event.getState().equals(Event.State.CANCELED))
             throw new ConditionsViolationException("Only pending or canceled events can be changed");
 
+        if (updateDto.getAnnotation() != null)
+            event.setAnnotation(updateDto.getAnnotation());
+        if (updateDto.getCategory() != null) {
+            Category category = categoryRepository.findById(updateDto.getCategory().getId())
+                    .orElseThrow(() -> new EntityNotExistsException(String.format("Category with id=%d was not found", updateDto.getCategory().getId())));
 
+            event.setCategory(category);
+        }
+        if (updateDto.getDescription() != null)
+            event.setDescription(updateDto.getDescription());
+        if (updateDto.getEventDate() != null) {
+            if (updateDto.getEventDate().isBefore(LocalDateTime.now().plusHours(2))) {
+                throw new DataValidationFailException("Field: eventDate. Error: должно содержать дату, которая еще не наступила. Value: " +
+                        updateDto.getEventDate());
+            }
+
+            event.setEventDate(updateDto.getEventDate());
+        }
+        if (updateDto.getLocation() != null) {
+            Location location = locationRepository.findByLatAndLon(updateDto.getLocation().getLat(), updateDto.getLocation().getLon());
+
+            event.setLocation(location);
+        }
+        if (updateDto.getPaid() != null)
+            event.setPaid(updateDto.getPaid());
+        if (updateDto.getParticipantLimit() != null)
+            event.setParticipantLimit(updateDto.getParticipantLimit());
+        if (updateDto.getRequestModeration() != null)
+            event.setRequestModeration(updateDto.getRequestModeration());
+        if (updateDto.getStateAction() != null) {
+            if (updateDto.getStateAction().equals(UpdateEventAdminRequest.StateAction.PUBLISH_EVENT))
+                event.setState(Event.State.PUBLISHED);
+            else
+                event.setState(Event.State.CANCELED);
+        }
+        if (updateDto.getTitle() != null)
+            event.setTitle(updateDto.getTitle());
+
+        try {
+            Event newEvent = eventsRepository.saveAndFlush(event);
+            return EventMapper.toDto(newEvent);
+        } catch (DataIntegrityViolationException exception) {
+            throw new FieldValueExistsException(exception.getMessage());
+        }
     }
 }
