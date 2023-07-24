@@ -1,5 +1,6 @@
 package com.leonovalexprog.repository;
 
+import com.leonovalexprog.model.Category;
 import com.leonovalexprog.model.Event;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -61,4 +62,21 @@ public interface EventsRepository extends JpaRepository<Event, Long> {
     @Query("SELECT e FROM Event AS e " +
             "WHERE e.state IN ?1")
     List<Event> findByStates(List<String> states, Pageable pageable);
+
+    @Query("SELECT e FROM Event AS e " +
+            "WHERE e.state = Event.State.PUBLISHED " +
+            "AND e.participantLimit > (SELECT COUNT(r) FROM e.requests AS r WHERE r.status = ParticipationRequest.Status.CONFIRMED) " +
+            "AND (lower(e.annotation) like concat('%', ?1, '%') OR lower(e.description) like concat('%', ?1, '%')) " +
+            "AND e.category IN ?2 " +
+            "AND e.paid IN ?3 " +
+            "AND e.eventDate BETWEEN ?4 AND ?5")
+    List<Event> findPublicAvailable(String text, List<Category> categories, List<Boolean> paid, LocalDateTime rangeStartFilter, LocalDateTime rangeEndFilter, Pageable pageable);
+
+    @Query("SELECT e FROM Event AS e " +
+            "WHERE e.state = Event.State.PUBLISHED " +
+            "AND (lower(e.annotation) like concat('%', ?1, '%') OR lower(e.description) like concat('%', ?1, '%')) " +
+            "AND e.category IN ?2 " +
+            "AND e.paid IN ?3 " +
+            "AND e.eventDate BETWEEN ?4 AND ?5")
+    List<Event> findPublic(String text, List<Category> categories, List<Boolean> paid, LocalDateTime rangeStartFilter, LocalDateTime rangeEndFilter, Pageable pageable);
 }

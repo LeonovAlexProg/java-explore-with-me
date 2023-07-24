@@ -1,10 +1,7 @@
 package com.leonovalexprog.service.event;
 
 import com.leonovalexprog.dto.*;
-import com.leonovalexprog.exception.exceptions.ConditionsViolationException;
-import com.leonovalexprog.exception.exceptions.DataValidationFailException;
-import com.leonovalexprog.exception.exceptions.EntityNotExistsException;
-import com.leonovalexprog.exception.exceptions.FieldValueExistsException;
+import com.leonovalexprog.exception.exceptions.*;
 import com.leonovalexprog.mapper.EventMapper;
 import com.leonovalexprog.mapper.ParticipationRequestMapper;
 import com.leonovalexprog.model.*;
@@ -16,7 +13,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -266,10 +265,14 @@ public class EventServiceImpl implements EventService {
     @Override
     public List<EventShortDto> getEventsByPublic(String text, List<Long> categories, Boolean paid,
                                                  LocalDateTime rangeStart, LocalDateTime rangeEnd, boolean onlyAvailable, String sort, int from, int size) {
+        String textFilter;
         List<Category> categoriesFilter;
         List<Boolean> paidFilter;
-        LocalDateTime rangeFilter;
-        List<Boolean> availableFilter;
+        LocalDateTime rangeStartFilter;
+        LocalDateTime rangeEndFilter;
+        Pageable pageable;
+
+        textFilter = text.toLowerCase();
 
         if (categories != null)
             categoriesFilter = categoryRepository.findAllById(categories);
@@ -281,6 +284,42 @@ public class EventServiceImpl implements EventService {
         else
             paidFilter = List.of(Boolean.TRUE, Boolean.FALSE);
 
+        if (rangeStart != null || rangeEnd != null) {
+            rangeStartFilter = rangeStart;
+            rangeEndFilter = rangeEnd;
+        } else {
+            rangeStartFilter = LocalDateTime.now();
+            rangeEndFilter = rangeStartFilter.plusYears(1000);
+        }
 
+        if (!sort.equals("EVENT_DATE") && !sort.equals("VIEWS"))
+            pageable = PageRequest.of(from / size, size, Sort.DEFAULT_DIRECTION);
+        else {
+            if (sort.equals("EVENT_DATE")) {
+                pageable = PageRequest.of(from / size, size, Sort.by("eventDate").ascending());
+            } else {
+                pageable = PageRequest.of(from / size, size, Sort.by("views").ascending());
+            }
+        }
+
+        List<Event> events;
+
+        if (onlyAvailable)
+            events = eventsRepository.findPublicAvailable(textFilter, categoriesFilter, paidFilter, rangeStartFilter, rangeEndFilter, pageable);
+        else
+            events = eventsRepository.findPublic(textFilter, categoriesFilter, paidFilter, rangeStartFilter, rangeEndFilter, pageable);
+
+        return EventMapper.toShortDto(events);
+    }
+
+    @Override
+    public EventDto getEventByPublic(Long eventId) {
+        Event event = eventsRepository.findById(eventId)
+                .orElseThrow(() -> new EntityNotExistsException(String.format("Event with id=%d was not found", eventId)));
+
+        if (!event.getState().equals(Event.State.PUBLISHED))
+            throw new BadRequestException("Event must be published");
+
+        return EventMapper.toDto(event);
     }
 }

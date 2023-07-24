@@ -1,9 +1,6 @@
 package com.leonovalexprog.exception;
 
-import com.leonovalexprog.exception.exceptions.ConditionsViolationException;
-import com.leonovalexprog.exception.exceptions.DataValidationFailException;
-import com.leonovalexprog.exception.exceptions.EntityNotExistsException;
-import com.leonovalexprog.exception.exceptions.FieldValueExistsException;
+import com.leonovalexprog.exception.exceptions.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -44,6 +41,19 @@ public class ErrorHandler {
                         e.getBindingResult().getFieldError().getField(),
                         e.getBindingResult().getFieldError().getDefaultMessage(),
                         e.getBindingResult().getFieldError().getRejectedValue()),
+                LocalDateTime.now().format(DateTimeFormatter.ofPattern(datetimePattern))
+        );
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse badRequestHandler(final BadRequestException e) {
+        log.warn(e.getMessage());
+
+        return new ErrorResponse(
+                HttpStatus.BAD_REQUEST.name(),
+                "The required object was not found.",
+                e.getMessage(),
                 LocalDateTime.now().format(DateTimeFormatter.ofPattern(datetimePattern))
         );
     }
