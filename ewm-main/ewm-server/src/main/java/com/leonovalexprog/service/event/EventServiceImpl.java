@@ -262,4 +262,25 @@ public class EventServiceImpl implements EventService {
             throw new FieldValueExistsException(exception.getMessage());
         }
     }
+
+    @Override
+    public List<EventShortDto> getEventsByPublic(String text, List<Long> categories, Boolean paid,
+                                                 LocalDateTime rangeStart, LocalDateTime rangeEnd, boolean onlyAvailable, String sort, int from, int size) {
+        List<Category> categoriesFilter;
+        List<Boolean> paidFilter;
+        LocalDateTime rangeFilter;
+        List<Boolean> availableFilter;
+
+        if (categories != null)
+            categoriesFilter = categoryRepository.findAllById(categories);
+        else
+            categoriesFilter = categoryRepository.findAll();
+
+        if (paid != null)
+            paidFilter = List.of(paid);
+        else
+            paidFilter = List.of(Boolean.TRUE, Boolean.FALSE);
+
+
+    }
 }

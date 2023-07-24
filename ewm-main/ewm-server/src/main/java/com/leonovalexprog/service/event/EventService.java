@@ -20,4 +20,6 @@ public interface EventService {
     List<EventDto> getEventsByAdmin(List<Long> users, List<String> states, List<Long> categories, LocalDateTime rangeStart, LocalDateTime rangeEnd, int from, int size);
 
     EventDto updateEventAdmin(long eventId, UpdateEventAdminRequest updateDto);
+
+    List<EventShortDto> getEventsByPublic(String text, List<Long> categories, Boolean paid, LocalDateTime rangeStart, LocalDateTime rangeEnd, boolean onlyAvailable, String sort, int from, int size);
 }
