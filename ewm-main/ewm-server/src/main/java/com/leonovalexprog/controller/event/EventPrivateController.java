@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -21,7 +22,7 @@ public class EventPrivateController {
     @PostMapping("/{userId}/events")
     @ResponseStatus(HttpStatus.CREATED)
     public EventDto postEvent(@PathVariable long userId,
-                              @RequestBody NewEventDto newEventDto) {
+                              @Valid @RequestBody NewEventDto newEventDto) {
         log.info("Add new event (userId = {}, event title = {})", userId, newEventDto.getTitle());
         return eventService.newEvent(userId, newEventDto);
     }

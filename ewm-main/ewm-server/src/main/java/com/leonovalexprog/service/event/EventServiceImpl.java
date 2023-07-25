@@ -100,9 +100,11 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public EventDto updateEvent(long userId, long eventId, UpdateEventUserRequest newEventDto) {
-        if (newEventDto.getEventDate().isBefore(LocalDateTime.now().plusHours(2))) {
-            throw new DataValidationFailException("Field: eventDate. Error: должно содержать дату, которая еще не наступила. Value: " +
-                    newEventDto.getEventDate());
+        if (newEventDto.getEventDate() != null) {
+            if (newEventDto.getEventDate().isBefore(LocalDateTime.now().plusHours(2))) {
+                throw new DataValidationFailException("Field: eventDate. Error: должно содержать дату, которая еще не наступила. Value: " +
+                        newEventDto.getEventDate());
+            }
         }
 
 
@@ -110,36 +112,54 @@ public class EventServiceImpl implements EventService {
                 .orElseThrow(() -> new EntityNotExistsException(String.format("User with id=%d was not found", userId)));
         Event event = eventsRepository.findById(eventId)
                 .orElseThrow(() -> new EntityNotExistsException(String.format("Event with id=%d was not found", eventId)));
-        Category category = categoryRepository.findById(newEventDto.getCategory().getId())
-                .orElseThrow(() -> new EntityNotExistsException(String.format("Category with id=%d was not found", newEventDto.getCategory().getId())));
 
         if (!event.getInitiator().getId().equals(user.getId()))
             throw new ConditionsViolationException("Only event initiator can update this event");
-        if (event.getState().equals(Event.State.PENDING) || event.getState().equals(Event.State.CANCELED))
+        if (!event.getState().equals(Event.State.PENDING) && !event.getState().equals(Event.State.CANCELED))
             throw new ConditionsViolationException("Only pending or canceled events can be changed");
 
-        event.setAnnotation(newEventDto.getAnnotation());
-        event.setCategory(category);
-        event.setDescription(newEventDto.getDescription());
-        event.setEventDate(newEventDto.getEventDate());
-        if (!locationRepository.existsByLatAndLon(newEventDto.getLocation().getLat(), newEventDto.getLocation().getLon())) {
-            Location location = Location.builder()
-                    .lat(newEventDto.getLocation().getLat())
-                    .lon(newEventDto.getLocation().getLon())
-                    .build();
-            Location newLocation = locationRepository.save(location);
+        if (newEventDto.getAnnotation() != null)
+            event.setAnnotation(newEventDto.getAnnotation());
 
-            event.setLocation(newLocation);
+        if (newEventDto.getCategory() != null) {
+            Category category = categoryRepository.findById(newEventDto.getCategory().getId())
+                    .orElseThrow(() -> new EntityNotExistsException(String.format("Category with id=%d was not found", newEventDto.getCategory().getId())));
+            event.setCategory(category);
         }
-        event.setPaid(newEventDto.getPaid());
-        event.setParticipantLimit(newEventDto.getParticipantLimit());
-        event.setRequestModeration(newEventDto.getRequestModeration());
-        event.setRequestModeration(newEventDto.getRequestModeration());
-        if (newEventDto.getStateAction().equals(UpdateEventUserRequest.StateAction.CANSEL_REVIEW))
-            event.setState(Event.State.CANCELED);
-        else
-            event.setState(Event.State.PENDING);
-        event.setTitle(newEventDto.getTitle());
+
+        if (newEventDto.getDescription() != null)
+            event.setDescription(newEventDto.getDescription());
+        if (newEventDto.getEventDate() != null)
+            event.setEventDate(newEventDto.getEventDate());
+
+        if (newEventDto.getLocation() != null) {
+            if (!locationRepository.existsByLatAndLon(newEventDto.getLocation().getLat(), newEventDto.getLocation().getLon())) {
+                Location location = Location.builder()
+                        .lat(newEventDto.getLocation().getLat())
+                        .lon(newEventDto.getLocation().getLon())
+                        .build();
+                Location newLocation = locationRepository.save(location);
+
+                event.setLocation(newLocation);
+            }
+        }
+
+        if (newEventDto.getPaid() != null)
+            event.setPaid(newEventDto.getPaid());
+        if (newEventDto.getParticipantLimit() != null)
+            event.setParticipantLimit(newEventDto.getParticipantLimit());
+        if (newEventDto.getRequestModeration() != null)
+            event.setRequestModeration(newEventDto.getRequestModeration());
+
+        if (newEventDto.getStateAction() != null) {
+            if (newEventDto.getStateAction().equals(UpdateEventUserRequest.StateAction.CANSEL_REVIEW))
+                event.setState(Event.State.CANCELED);
+            else
+                event.setState(Event.State.PENDING);
+        }
+
+        if (newEventDto.getTitle() != null)
+            event.setTitle(newEventDto.getTitle());
 
         try {
             Event newEvent = eventsRepository.saveAndFlush(event);
@@ -164,18 +184,16 @@ public class EventServiceImpl implements EventService {
     @Override
     public List<EventDto> getEventsByAdmin(List<Long> users, List<String> states, List<Long> categories, LocalDateTime rangeStart, LocalDateTime rangeEnd, int from, int size) {
         List<Event> events;
-        List<String> searchingStates;
+        List<Event.State> searchingStates;
 
         Pageable pageable = PageRequest.of(from / size, size);
 
         if (categories != null) {
             searchingStates = Arrays.stream(Event.State.values())
-                    .map(Enum::toString)
-                    .filter(states::contains)
+                    .filter(e -> states.contains(e.toString()))
                     .collect(Collectors.toList());
         } else {
             searchingStates = Arrays.stream(Event.State.values())
-                    .map(Enum::toString)
                     .collect(Collectors.toList());
         }
 
@@ -292,8 +310,8 @@ public class EventServiceImpl implements EventService {
             rangeEndFilter = rangeStartFilter.plusYears(1000);
         }
 
-        if (!sort.equals("EVENT_DATE") && !sort.equals("VIEWS"))
-            pageable = PageRequest.of(from / size, size, Sort.DEFAULT_DIRECTION);
+        if (sort == null || (!sort.equals("EVENT_DATE") && !sort.equals("VIEWS")))
+            pageable = PageRequest.of(from / size, size, Sort.by("createdOn").descending());
         else {
             if (sort.equals("EVENT_DATE")) {
                 pageable = PageRequest.of(from / size, size, Sort.by("eventDate").ascending());
@@ -318,7 +336,7 @@ public class EventServiceImpl implements EventService {
                 .orElseThrow(() -> new EntityNotExistsException(String.format("Event with id=%d was not found", eventId)));
 
         if (!event.getState().equals(Event.State.PUBLISHED))
-            throw new BadRequestException("Event must be published");
+            throw new EntityNotExistsException("Event must be published");
 
         return EventMapper.toDto(event);
     }

@@ -13,6 +13,6 @@ import javax.validation.constraints.*;
 @NoArgsConstructor
 public class NewCategoryDto {
     @NotBlank(message = "Name is mandatory")
-    @Size(max = 50, message = "Name length must be shorter then 50")
+    @Size(min = 1, max = 50, message = "Category's name size is out of bounds")
     private String name;
 }

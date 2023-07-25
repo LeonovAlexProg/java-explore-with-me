@@ -5,6 +5,7 @@ import com.leonovalexprog.dto.NewCategoryDto;
 import com.leonovalexprog.service.category.CategoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -17,6 +18,7 @@ public class CategoryAdminController {
     private final CategoryService categoryService;
 
     @PostMapping
+    @ResponseStatus(value = HttpStatus.CREATED)
     public CategoryDto postCategory(@Valid @RequestBody NewCategoryDto newCategoryDto) {
         log.info("Create new category (name = {})", newCategoryDto.getName());
         return categoryService.newCategory(newCategoryDto);
