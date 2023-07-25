@@ -30,7 +30,7 @@ public class StatsClient {
 
     public void registerRequest(String app, HttpServletRequest request) {
         RequestRegisterDto registerDto = RequestRegisterDto.builder()
-                .app("ewm-main-service")
+                .app(app)
                 .uri(request.getRequestURI())
                 .ip(request.getRemoteAddr())
                 .datetime(LocalDateTime.now())

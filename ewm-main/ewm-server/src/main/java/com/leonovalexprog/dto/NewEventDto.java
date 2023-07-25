@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.lang.Nullable;
 
+import javax.validation.constraints.Future;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -29,15 +30,16 @@ public class NewEventDto {
     private String description;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @NotNull(message = "Event date is mandatory")
+    @Future(message = "Date can not be in past")
     private LocalDateTime eventDate;
     @NotNull(message = "Location is mandatory")
     private LocationDto location;
     @Nullable
-    private Boolean paid;
+    private Boolean paid = false;
     @Nullable
-    private Long participantLimit;
+    private Long participantLimit = 0L;
     @Nullable
-    private Boolean requestModeration;
+    private Boolean requestModeration = true;
     @NotBlank(message = "Title is mandatory")
     @Size(max = 120, message = "Title to long")
     @Size(min = 3, message = "Title to short")

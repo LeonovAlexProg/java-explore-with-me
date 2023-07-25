@@ -4,6 +4,7 @@ import com.leonovalexprog.dto.ParticipationRequestDto;
 import com.leonovalexprog.service.request.RequestService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,6 +17,7 @@ public class RequestsPrivateController {
     private final RequestService requestService;
 
     @PostMapping("/{userId}/requests")
+    @ResponseStatus(value = HttpStatus.CREATED)
     public ParticipationRequestDto postParticipationRequest(@PathVariable long userId,
                                                             @RequestParam long eventId) {
         log.info("Register for participation (user id = {}, event id = {})", userId, eventId);

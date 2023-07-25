@@ -42,7 +42,7 @@ public class RequestServiceImpl implements RequestService {
         }
         if (event.getInitiator().equals(user))
             throw new ConditionsViolationException("User is initiator of this event");
-        if (event.getRequests().size() == event.getParticipantLimit())
+        if (!event.getParticipantLimit().equals(0L) && (event.getRequests().size() == event.getParticipantLimit()))
             throw new ConditionsViolationException("Participation limit is overflowed");
 
         ParticipationRequest participationRequest = ParticipationRequest.builder()

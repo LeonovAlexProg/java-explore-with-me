@@ -6,6 +6,7 @@ import com.leonovalexprog.dto.UpdateCompilationRequest;
 import com.leonovalexprog.service.compilation.CompilationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +20,8 @@ public class CompilationAdminController {
     private final CompilationService compilationService;
 
     @PostMapping
-    public CompilationDto postCompilation(@RequestBody NewCompilationDto newCompilationDto) {
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public CompilationDto postCompilation(@Valid @RequestBody NewCompilationDto newCompilationDto) {
         log.info("Post new compilation (events = {}, pinned = {}, title = {})", newCompilationDto.getEvents(), newCompilationDto.getPinned(), newCompilationDto.getTitle());
         return compilationService.postCompilation(newCompilationDto);
     }

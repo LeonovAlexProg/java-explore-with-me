@@ -6,6 +6,7 @@ import com.leonovalexprog.service.request.RequestService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -45,7 +46,7 @@ public class EventPrivateController {
     @PatchMapping("/{userId}/events/{eventId}")
     public EventDto patchEvent(@PathVariable long userId,
                                                 @PathVariable long eventId,
-                                                @RequestBody UpdateEventUserRequest newEventDto) {
+                                                @Validated @Valid @RequestBody UpdateEventUserRequest newEventDto) {
         log.info("Patch user event (user id = {}, event id = {})", userId, eventId);
         return eventService.updateEvent(userId, eventId, newEventDto);
     }

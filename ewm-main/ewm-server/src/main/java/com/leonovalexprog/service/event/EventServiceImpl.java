@@ -1,5 +1,6 @@
 package com.leonovalexprog.service.event;
 
+import com.leonovalexprog.client.StatsClient;
 import com.leonovalexprog.dto.*;
 import com.leonovalexprog.exception.exceptions.*;
 import com.leonovalexprog.mapper.EventMapper;
@@ -15,7 +16,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -30,6 +30,8 @@ public class EventServiceImpl implements EventService {
     private final UserRepository userRepository;
     private final CategoriesRepository categoryRepository;
     private final LocationRepository locationRepository;
+
+    private final StatsClient statsClient;
 
     @Override
     public EventDto newEvent(long userId, NewEventDto newEventDto) {
@@ -188,7 +190,7 @@ public class EventServiceImpl implements EventService {
 
         Pageable pageable = PageRequest.of(from / size, size);
 
-        if (categories != null) {
+        if (states != null) {
             searchingStates = Arrays.stream(Event.State.values())
                     .filter(e -> states.contains(e.toString()))
                     .collect(Collectors.toList());
@@ -231,14 +233,14 @@ public class EventServiceImpl implements EventService {
         Event event = eventsRepository.findById(eventId)
                 .orElseThrow(() -> new EntityNotExistsException(String.format("Event with id=%d was not found", eventId)));
 
-        if (event.getState().equals(Event.State.PENDING) || event.getState().equals(Event.State.CANCELED))
+        if (!event.getState().equals(Event.State.PENDING) && !event.getState().equals(Event.State.CANCELED))
             throw new ConditionsViolationException("Only pending or canceled events can be changed");
 
         if (updateDto.getAnnotation() != null)
             event.setAnnotation(updateDto.getAnnotation());
         if (updateDto.getCategory() != null) {
-            Category category = categoryRepository.findById(updateDto.getCategory().getId())
-                    .orElseThrow(() -> new EntityNotExistsException(String.format("Category with id=%d was not found", updateDto.getCategory().getId())));
+            Category category = categoryRepository.findById(updateDto.getCategory())
+                    .orElseThrow(() -> new EntityNotExistsException(String.format("Category with id=%d was not found", updateDto.getCategory())));
 
             event.setCategory(category);
         }
@@ -246,7 +248,7 @@ public class EventServiceImpl implements EventService {
             event.setDescription(updateDto.getDescription());
         if (updateDto.getEventDate() != null) {
             if (updateDto.getEventDate().isBefore(LocalDateTime.now().plusHours(2))) {
-                throw new DataValidationFailException("Field: eventDate. Error: должно содержать дату, которая еще не наступила. Value: " +
+                throw new BadRequestException("Field: eventDate. Error: должно содержать дату, которая еще не наступила. Value: " +
                         updateDto.getEventDate());
             }
 
@@ -254,8 +256,18 @@ public class EventServiceImpl implements EventService {
         }
         if (updateDto.getLocation() != null) {
             Location location = locationRepository.findByLatAndLon(updateDto.getLocation().getLat(), updateDto.getLocation().getLon());
+            if (location == null) {
+                Location newLocation = Location.builder()
+                        .lat(updateDto.getLocation().getLat())
+                        .lon(updateDto.getLocation().getLon())
+                        .build();
 
-            event.setLocation(location);
+                newLocation = locationRepository.save(newLocation);
+
+                event.setLocation(newLocation);
+            } else {
+                event.setLocation(location);
+            }
         }
         if (updateDto.getPaid() != null)
             event.setPaid(updateDto.getPaid());
@@ -264,10 +276,12 @@ public class EventServiceImpl implements EventService {
         if (updateDto.getRequestModeration() != null)
             event.setRequestModeration(updateDto.getRequestModeration());
         if (updateDto.getStateAction() != null) {
-            if (updateDto.getStateAction().equals(UpdateEventAdminRequest.StateAction.PUBLISH_EVENT))
+            if (updateDto.getStateAction().equals(UpdateEventAdminRequest.StateAction.PUBLISH_EVENT)) {
                 event.setState(Event.State.PUBLISHED);
-            else
+                event.setPublishedOn(LocalDateTime.now());
+            } else {
                 event.setState(Event.State.CANCELED);
+            }
         }
         if (updateDto.getTitle() != null)
             event.setTitle(updateDto.getTitle());
@@ -302,7 +316,10 @@ public class EventServiceImpl implements EventService {
         else
             paidFilter = List.of(Boolean.TRUE, Boolean.FALSE);
 
-        if (rangeStart != null || rangeEnd != null) {
+        if (rangeStart != null && rangeEnd != null) {
+            if (rangeStart.isAfter(rangeEnd))
+                throw new BadRequestException("Range end is before Range start");
+
             rangeStartFilter = rangeStart;
             rangeEndFilter = rangeEnd;
         } else {
@@ -337,6 +354,22 @@ public class EventServiceImpl implements EventService {
 
         if (!event.getState().equals(Event.State.PUBLISHED))
             throw new EntityNotExistsException("Event must be published");
+
+        Long eventUniqueViews = (long) statsClient.getRequestsStat(
+                LocalDateTime.now().minusYears(100),
+                LocalDateTime.now().plusYears(100),
+                List.of("/events/" + eventId),
+                true
+        ).get(0).getHits();
+
+        if (event.getViews() < eventUniqueViews)
+            event.setViews(eventUniqueViews);
+
+        try {
+            eventsRepository.saveAndFlush(event);
+        } catch (DataIntegrityViolationException exception) {
+            throw new FieldValueExistsException(exception.getMessage());
+        }
 
         return EventMapper.toDto(event);
     }

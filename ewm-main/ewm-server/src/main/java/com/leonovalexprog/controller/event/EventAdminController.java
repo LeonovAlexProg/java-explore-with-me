@@ -6,8 +6,10 @@ import com.leonovalexprog.service.event.EventService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -34,7 +36,7 @@ public class EventAdminController {
 
     @PatchMapping("/{eventId}")
     public EventDto patchEvent(@PathVariable long eventId,
-                               @RequestBody UpdateEventAdminRequest updateDto) {
+                               @Validated @Valid @RequestBody UpdateEventAdminRequest updateDto) {
         log.info("Update event (event id = {}, state action = {})", eventId, updateDto.getStateAction());
 
         return eventService.updateEventAdmin(eventId, updateDto);

@@ -15,6 +15,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -47,9 +48,9 @@ public class CompilationServiceImpl implements CompilationService {
 
     @Override
     public CompilationDto postCompilation(NewCompilationDto newCompilationDto) {
-        List<Event> events = null;
+        List<Event> events = Collections.emptyList();
 
-        if (!newCompilationDto.getEvents().isEmpty())
+        if (newCompilationDto.getEvents() != null && !newCompilationDto.getEvents().isEmpty())
             events = eventsRepository.findAllById(newCompilationDto.getEvents());
 
         Compilation compilation = Compilation.builder()
@@ -80,7 +81,7 @@ public class CompilationServiceImpl implements CompilationService {
                 .orElseThrow(() -> new EntityNotExistsException(String.format("Compilation with id=%d was not found", compId)));
 
         List<Event> events = null;
-        if (!updateCompilationRequest.getEvents().isEmpty())
+        if (updateCompilationRequest.getEvents() != null && !updateCompilationRequest.getEvents().isEmpty())
             events = eventsRepository.findAllById(updateCompilationRequest.getEvents());
 
         if (events != null)
