@@ -121,4 +121,26 @@ public class RequestServiceImpl implements RequestService {
 
         return updateResult;
     }
+
+    @Override
+    public List<ParticipationRequestDto> getUserParticipationRequests(long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotExistsException(String.format("User with id=%d was not found", userId)));
+
+        List<ParticipationRequest> requests = requestRepository.findAllByUser(user);
+
+        return ParticipationRequestMapper.toDto(requests);
+    }
+
+    @Override
+    public ParticipationRequestDto canselParticipationRequest(long userId, long requestId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotExistsException(String.format("User with id=%d was not found", userId)));
+        ParticipationRequest request = requestRepository.findById(requestId)
+                .orElseThrow(() -> new EntityNotExistsException(String.format("Participation request with id=%d was not found", requestId)));
+
+        requestRepository.delete(request);
+
+        return ParticipationRequestMapper.toDto(request);
+    }
 }

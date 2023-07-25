@@ -64,8 +64,8 @@ public interface EventsRepository extends JpaRepository<Event, Long> {
     List<Event> findByStates(List<String> states, Pageable pageable);
 
     @Query("SELECT e FROM Event AS e " +
-            "WHERE e.state = Event.State.PUBLISHED " +
-            "AND e.participantLimit > (SELECT COUNT(r) FROM e.requests AS r WHERE r.status = ParticipationRequest.Status.CONFIRMED) " +
+            "WHERE e.state = 'PUBLISHED' " +
+            "AND e.participantLimit > (SELECT COUNT(r) FROM e.requests AS r WHERE r.status = 'CONFIRMED') " +
             "AND (lower(e.annotation) like concat('%', ?1, '%') OR lower(e.description) like concat('%', ?1, '%')) " +
             "AND e.category IN ?2 " +
             "AND e.paid IN ?3 " +
@@ -73,7 +73,7 @@ public interface EventsRepository extends JpaRepository<Event, Long> {
     List<Event> findPublicAvailable(String text, List<Category> categories, List<Boolean> paid, LocalDateTime rangeStartFilter, LocalDateTime rangeEndFilter, Pageable pageable);
 
     @Query("SELECT e FROM Event AS e " +
-            "WHERE e.state = Event.State.PUBLISHED " +
+            "WHERE e.state = 'PUBLISHED' " +
             "AND (lower(e.annotation) like concat('%', ?1, '%') OR lower(e.description) like concat('%', ?1, '%')) " +
             "AND e.category IN ?2 " +
             "AND e.paid IN ?3 " +
