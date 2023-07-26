@@ -73,7 +73,7 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse ConditionsViolationException(final ConditionsViolationException e) {
+    public ErrorResponse conditionsViolationHandler(final ConditionsViolationException e) {
         log.warn(e.getMessage());
 
         return new ErrorResponse(

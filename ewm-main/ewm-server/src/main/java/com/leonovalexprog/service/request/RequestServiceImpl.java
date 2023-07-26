@@ -99,7 +99,7 @@ public class RequestServiceImpl implements RequestService {
                     }
 
                     if (updateRequest.getRequestIds().contains(request.getId())) {
-                        if (request.getStatus().equals(ParticipationRequest.Status.PENDING)){
+                        if (request.getStatus().equals(ParticipationRequest.Status.PENDING)) {
                             request.setStatus(updateRequest.getStatus().equals(
                                     EventRequestStatusUpdateRequest.Status.CONFIRMED) ? ParticipationRequest.Status.CONFIRMED : ParticipationRequest.Status.REJECTED
                             );

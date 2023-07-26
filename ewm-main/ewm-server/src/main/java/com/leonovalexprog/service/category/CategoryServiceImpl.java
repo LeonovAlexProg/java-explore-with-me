@@ -21,8 +21,9 @@ import java.util.List;
 public class CategoryServiceImpl implements CategoryService {
     private final CategoriesRepository categoriesRepository;
     private final EventsRepository eventsRepository;
+
     @Override
-    public CategoryDto newCategory(NewCategoryDto newCategoryDto){
+    public CategoryDto newCategory(NewCategoryDto newCategoryDto) {
         Category category = Category.builder()
                 .name(newCategoryDto.getName())
                 .build();
