@@ -1,7 +1,7 @@
 package com.leonovalexprog.mapper;
 
-import com.leonovalexprog.dto.EventDto;
-import com.leonovalexprog.dto.EventShortDto;
+import com.leonovalexprog.dto.event.EventDto;
+import com.leonovalexprog.dto.event.EventShortDto;
 import com.leonovalexprog.model.Event;
 import com.leonovalexprog.model.ParticipationRequest;
 import lombok.experimental.UtilityClass;

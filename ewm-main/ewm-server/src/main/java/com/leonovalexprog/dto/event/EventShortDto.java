@@ -1,6 +1,8 @@
-package com.leonovalexprog.dto;
+package com.leonovalexprog.dto.event;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.leonovalexprog.dto.user.UserShortDto;
+import com.leonovalexprog.dto.category.CategoryDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

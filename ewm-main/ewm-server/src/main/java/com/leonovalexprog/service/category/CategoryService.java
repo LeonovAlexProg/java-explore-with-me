@@ -1,7 +1,7 @@
 package com.leonovalexprog.service.category;
 
-import com.leonovalexprog.dto.CategoryDto;
-import com.leonovalexprog.dto.NewCategoryDto;
+import com.leonovalexprog.dto.category.CategoryDto;
+import com.leonovalexprog.dto.category.NewCategoryDto;
 
 import java.util.List;
 

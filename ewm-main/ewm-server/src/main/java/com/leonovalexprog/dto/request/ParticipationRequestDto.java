@@ -1,4 +1,4 @@
-package com.leonovalexprog.dto;
+package com.leonovalexprog.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.leonovalexprog.model.ParticipationRequest;

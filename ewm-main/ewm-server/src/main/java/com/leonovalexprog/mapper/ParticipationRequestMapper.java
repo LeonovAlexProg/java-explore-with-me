@@ -1,6 +1,6 @@
 package com.leonovalexprog.mapper;
 
-import com.leonovalexprog.dto.ParticipationRequestDto;
+import com.leonovalexprog.dto.request.ParticipationRequestDto;
 import com.leonovalexprog.model.ParticipationRequest;
 import lombok.experimental.UtilityClass;
 
@@ -14,7 +14,7 @@ public class ParticipationRequestMapper {
                 .id(participationRequest.getId())
                 .requester(participationRequest.getRequester().getId())
                 .event(participationRequest.getEvent().getId())
-                .status(participationRequest.getStatus())
+                .status(participationRequest.getStatus() )
                 .created(participationRequest.getCreated())
                 .build();
     }

@@ -1,8 +1,8 @@
 package com.leonovalexprog.controller.event;
 
 import com.leonovalexprog.client.StatsClient;
-import com.leonovalexprog.dto.EventDto;
-import com.leonovalexprog.dto.EventShortDto;
+import com.leonovalexprog.dto.event.EventDto;
+import com.leonovalexprog.dto.event.EventShortDto;
 import com.leonovalexprog.service.event.EventService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

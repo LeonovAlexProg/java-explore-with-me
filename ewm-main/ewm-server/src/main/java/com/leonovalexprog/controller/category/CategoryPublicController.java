@@ -1,6 +1,6 @@
 package com.leonovalexprog.controller.category;
 
-import com.leonovalexprog.dto.CategoryDto;
+import com.leonovalexprog.dto.category.CategoryDto;
 import com.leonovalexprog.service.category.CategoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

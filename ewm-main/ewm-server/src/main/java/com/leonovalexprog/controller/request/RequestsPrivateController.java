@@ -1,6 +1,6 @@
 package com.leonovalexprog.controller.request;
 
-import com.leonovalexprog.dto.ParticipationRequestDto;
+import com.leonovalexprog.dto.request.ParticipationRequestDto;
 import com.leonovalexprog.service.request.RequestService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +32,7 @@ public class RequestsPrivateController {
 
     @PatchMapping("/{userId}/requests/{requestId}/cancel")
     public ParticipationRequestDto patchParticipationRequest(@PathVariable long userId,
-                                                             @RequestParam long requestId) {
+                                                             @PathVariable long requestId) {
         log.info("Patch user participation request (user id = {}, request id = {})", userId, requestId);
         return requestService.canselParticipationRequest(userId, requestId);
     }

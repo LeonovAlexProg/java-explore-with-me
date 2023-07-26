@@ -1,8 +1,8 @@
 package com.leonovalexprog.service.request;
 
-import com.leonovalexprog.dto.EventRequestStatusUpdateRequest;
-import com.leonovalexprog.dto.EventRequestStatusUpdateResult;
-import com.leonovalexprog.dto.ParticipationRequestDto;
+import com.leonovalexprog.dto.request.EventRequestStatusUpdateRequest;
+import com.leonovalexprog.dto.request.EventRequestStatusUpdateResult;
+import com.leonovalexprog.dto.request.ParticipationRequestDto;
 
 import java.util.List;
 

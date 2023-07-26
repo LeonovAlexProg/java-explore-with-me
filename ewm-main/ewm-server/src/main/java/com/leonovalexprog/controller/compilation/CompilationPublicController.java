@@ -1,6 +1,6 @@
 package com.leonovalexprog.controller.compilation;
 
-import com.leonovalexprog.dto.CompilationDto;
+import com.leonovalexprog.dto.compilation.CompilationDto;
 import com.leonovalexprog.service.compilation.CompilationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

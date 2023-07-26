@@ -1,7 +1,7 @@
 package com.leonovalexprog.service.user;
 
-import com.leonovalexprog.dto.NewUserRequest;
-import com.leonovalexprog.dto.UserDto;
+import com.leonovalexprog.dto.request.NewUserRequest;
+import com.leonovalexprog.dto.user.UserDto;
 
 import java.util.List;
 

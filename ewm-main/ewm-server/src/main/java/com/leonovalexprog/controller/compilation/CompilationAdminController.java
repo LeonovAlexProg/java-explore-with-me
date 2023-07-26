@@ -1,8 +1,8 @@
 package com.leonovalexprog.controller.compilation;
 
-import com.leonovalexprog.dto.CompilationDto;
-import com.leonovalexprog.dto.NewCompilationDto;
-import com.leonovalexprog.dto.UpdateCompilationRequest;
+import com.leonovalexprog.dto.compilation.CompilationDto;
+import com.leonovalexprog.dto.compilation.NewCompilationDto;
+import com.leonovalexprog.dto.compilation.UpdateCompilationRequest;
 import com.leonovalexprog.service.compilation.CompilationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +27,7 @@ public class CompilationAdminController {
     }
 
     @DeleteMapping("/{compId}")
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteCompilation(@PathVariable Long compId) {
         log.info("Delete compilation (comp id = {})", compId);
         compilationService.deleteCompilation(compId);

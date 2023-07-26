@@ -1,8 +1,8 @@
 package com.leonovalexprog.service.compilation;
 
-import com.leonovalexprog.dto.CompilationDto;
-import com.leonovalexprog.dto.NewCompilationDto;
-import com.leonovalexprog.dto.UpdateCompilationRequest;
+import com.leonovalexprog.dto.compilation.CompilationDto;
+import com.leonovalexprog.dto.compilation.NewCompilationDto;
+import com.leonovalexprog.dto.compilation.UpdateCompilationRequest;
 import com.leonovalexprog.exception.exceptions.EntityNotExistsException;
 import com.leonovalexprog.exception.exceptions.FieldValueExistsException;
 import com.leonovalexprog.mapper.CompilationMapper;

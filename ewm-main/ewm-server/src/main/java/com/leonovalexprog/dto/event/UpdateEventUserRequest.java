@@ -1,6 +1,8 @@
-package com.leonovalexprog.dto;
+package com.leonovalexprog.dto.event;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.leonovalexprog.dto.category.CategoryDto;
+import com.leonovalexprog.dto.location.LocationDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -52,6 +54,6 @@ public class UpdateEventUserRequest {
 
     public enum StateAction {
         SEND_TO_REVIEW,
-        CANSEL_REVIEW
+        CANCEL_REVIEW
     }
 }

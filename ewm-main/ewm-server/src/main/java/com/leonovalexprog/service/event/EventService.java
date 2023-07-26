@@ -1,6 +1,7 @@
 package com.leonovalexprog.service.event;
 
-import com.leonovalexprog.dto.*;
+import com.leonovalexprog.dto.event.*;
+import com.leonovalexprog.dto.request.ParticipationRequestDto;
 
 import java.time.LocalDateTime;
 import java.util.List;

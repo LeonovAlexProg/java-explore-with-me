@@ -1,6 +1,12 @@
 package com.leonovalexprog.controller.event;
 
-import com.leonovalexprog.dto.*;
+import com.leonovalexprog.dto.event.EventDto;
+import com.leonovalexprog.dto.event.EventShortDto;
+import com.leonovalexprog.dto.event.NewEventDto;
+import com.leonovalexprog.dto.event.UpdateEventUserRequest;
+import com.leonovalexprog.dto.request.EventRequestStatusUpdateRequest;
+import com.leonovalexprog.dto.request.EventRequestStatusUpdateResult;
+import com.leonovalexprog.dto.request.ParticipationRequestDto;
 import com.leonovalexprog.service.event.EventService;
 import com.leonovalexprog.service.request.RequestService;
 import lombok.RequiredArgsConstructor;
@@ -60,8 +66,8 @@ public class EventPrivateController {
 
     @PatchMapping("/{userId}/events/{eventId}/requests")
     public EventRequestStatusUpdateResult patchEventRequests(@PathVariable long userId,
-                                                            @PathVariable long eventId,
-                                                            @RequestBody EventRequestStatusUpdateRequest updateRequest) {
+                                                             @PathVariable long eventId,
+                                                             @Valid @RequestBody EventRequestStatusUpdateRequest updateRequest) {
         log.info("Update event participation requests (user id = {}, event id = {}, requests = {}",
                 userId,
                 eventId,

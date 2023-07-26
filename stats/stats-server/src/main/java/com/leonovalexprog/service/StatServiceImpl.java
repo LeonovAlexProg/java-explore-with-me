@@ -2,6 +2,7 @@ package com.leonovalexprog.service;
 
 import com.leonovalexprog.dto.RequestRegisterDto;
 import com.leonovalexprog.dto.RequestResponseDto;
+import com.leonovalexprog.exception.exceptions.BadRequestException;
 import com.leonovalexprog.mapper.RequestMapper;
 import com.leonovalexprog.model.Request;
 import com.leonovalexprog.repository.RequestRepository;
@@ -31,6 +32,9 @@ public class StatServiceImpl implements StatService {
     public List<RequestResponseDto> getRequestsStat(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
         List<Request> requests;
         List<RequestResponseDto> responses;
+
+        if (start.isAfter(end))
+            throw new BadRequestException("Range end is before Range start");
 
         if (uris == null || uris.isEmpty()) {
             requests = repository.findByDatetime(start, end);

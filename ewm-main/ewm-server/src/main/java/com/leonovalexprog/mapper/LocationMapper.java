@@ -1,6 +1,6 @@
 package com.leonovalexprog.mapper;
 
-import com.leonovalexprog.dto.LocationDto;
+import com.leonovalexprog.dto.location.LocationDto;
 import com.leonovalexprog.model.Location;
 import lombok.experimental.UtilityClass;
 

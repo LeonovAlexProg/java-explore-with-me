@@ -1,5 +1,6 @@
-package com.leonovalexprog.dto;
+package com.leonovalexprog.dto.compilation;
 
+import com.leonovalexprog.dto.event.EventShortDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

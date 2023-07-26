@@ -1,6 +1,6 @@
 package com.leonovalexprog.mapper;
 
-import com.leonovalexprog.dto.CompilationDto;
+import com.leonovalexprog.dto.compilation.CompilationDto;
 import com.leonovalexprog.model.Compilation;
 import lombok.experimental.UtilityClass;
 

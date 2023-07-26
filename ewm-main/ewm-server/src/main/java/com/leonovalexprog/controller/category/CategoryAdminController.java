@@ -1,7 +1,7 @@
 package com.leonovalexprog.controller.category;
 
-import com.leonovalexprog.dto.CategoryDto;
-import com.leonovalexprog.dto.NewCategoryDto;
+import com.leonovalexprog.dto.category.CategoryDto;
+import com.leonovalexprog.dto.category.NewCategoryDto;
 import com.leonovalexprog.service.category.CategoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +25,7 @@ public class CategoryAdminController {
     }
 
     @DeleteMapping("/{catId}")
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteCategory(@PathVariable long catId) {
         log.info("Delete category (id = {})", catId);
         categoryService.deleteCategory(catId);

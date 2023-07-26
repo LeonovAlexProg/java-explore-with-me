@@ -1,7 +1,7 @@
 package com.leonovalexprog.mapper;
 
-import com.leonovalexprog.dto.UserDto;
-import com.leonovalexprog.dto.UserShortDto;
+import com.leonovalexprog.dto.user.UserDto;
+import com.leonovalexprog.dto.user.UserShortDto;
 import com.leonovalexprog.model.User;
 import lombok.experimental.UtilityClass;
 

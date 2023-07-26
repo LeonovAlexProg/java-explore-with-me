@@ -1,7 +1,7 @@
 package com.leonovalexprog.controller.user;
 
-import com.leonovalexprog.dto.NewUserRequest;
-import com.leonovalexprog.dto.UserDto;
+import com.leonovalexprog.dto.request.NewUserRequest;
+import com.leonovalexprog.dto.user.UserDto;
 import com.leonovalexprog.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +26,7 @@ public class UserAdminController {
     }
 
     @DeleteMapping("/{userId}")
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteUser(@PathVariable long userId) {
         log.info("Delete user (id = {})", userId);
         userService.deleteUser(userId);

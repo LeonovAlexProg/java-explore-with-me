@@ -1,6 +1,6 @@
 package com.leonovalexprog.mapper;
 
-import com.leonovalexprog.dto.CategoryDto;
+import com.leonovalexprog.dto.category.CategoryDto;
 import com.leonovalexprog.model.Category;
 import lombok.experimental.UtilityClass;
 

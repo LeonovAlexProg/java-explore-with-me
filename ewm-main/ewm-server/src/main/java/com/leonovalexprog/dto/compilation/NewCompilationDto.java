@@ -1,4 +1,4 @@
-package com.leonovalexprog.dto;
+package com.leonovalexprog.dto.compilation;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,21 +8,21 @@ import org.springframework.lang.Nullable;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.Collections;
 import java.util.List;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UpdateCompilationRequest {
+public class NewCompilationDto {
     @Nullable
-    List<Long> events;
+    private List<Long> events = Collections.emptyList();
 
     @Nullable
-    Boolean pinned;
+    private Boolean pinned = false;
 
-    @Nullable
     @NotBlank(message = "Title is mandatory")
     @Size(min = 1, max = 50, message = "Title size is out of bounds")
-    String title;
+    private String title;
 }

@@ -1,7 +1,8 @@
 package com.leonovalexprog.service.event;
 
 import com.leonovalexprog.client.StatsClient;
-import com.leonovalexprog.dto.*;
+import com.leonovalexprog.dto.event.*;
+import com.leonovalexprog.dto.request.ParticipationRequestDto;
 import com.leonovalexprog.exception.exceptions.*;
 import com.leonovalexprog.mapper.EventMapper;
 import com.leonovalexprog.mapper.ParticipationRequestMapper;
@@ -154,7 +155,7 @@ public class EventServiceImpl implements EventService {
             event.setRequestModeration(newEventDto.getRequestModeration());
 
         if (newEventDto.getStateAction() != null) {
-            if (newEventDto.getStateAction().equals(UpdateEventUserRequest.StateAction.CANSEL_REVIEW))
+            if (newEventDto.getStateAction().equals(UpdateEventUserRequest.StateAction.CANCEL_REVIEW))
                 event.setState(Event.State.CANCELED);
             else
                 event.setState(Event.State.PENDING);
@@ -235,6 +236,10 @@ public class EventServiceImpl implements EventService {
 
         if (!event.getState().equals(Event.State.PENDING) && !event.getState().equals(Event.State.CANCELED))
             throw new ConditionsViolationException("Only pending or canceled events can be changed");
+        if (updateDto.getStateAction() != null) {
+            if (updateDto.getStateAction().equals(UpdateEventAdminRequest.StateAction.PUBLISH_EVENT) && event.getState().equals(Event.State.CANCELED))
+                throw new ConditionsViolationException("Cancelled event can't be published");
+        }
 
         if (updateDto.getAnnotation() != null)
             event.setAnnotation(updateDto.getAnnotation());

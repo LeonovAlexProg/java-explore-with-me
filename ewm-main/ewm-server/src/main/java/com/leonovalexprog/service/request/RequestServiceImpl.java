@@ -1,8 +1,8 @@
 package com.leonovalexprog.service.request;
 
-import com.leonovalexprog.dto.EventRequestStatusUpdateRequest;
-import com.leonovalexprog.dto.EventRequestStatusUpdateResult;
-import com.leonovalexprog.dto.ParticipationRequestDto;
+import com.leonovalexprog.dto.request.EventRequestStatusUpdateRequest;
+import com.leonovalexprog.dto.request.EventRequestStatusUpdateResult;
+import com.leonovalexprog.dto.request.ParticipationRequestDto;
 import com.leonovalexprog.exception.exceptions.ConditionsViolationException;
 import com.leonovalexprog.exception.exceptions.EntityNotExistsException;
 import com.leonovalexprog.exception.exceptions.FieldValueExistsException;
@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +36,9 @@ public class RequestServiceImpl implements RequestService {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new EntityNotExistsException(String.format("Event with id=%d was not found", eventId)));
 
+        if (!event.getState().equals(Event.State.PUBLISHED))
+            throw new ConditionsViolationException("Event is not published");
+
         if (event.getRequests().stream()
                 .map(ParticipationRequest::getRequester)
                 .anyMatch(requester -> requester.equals(user))) {
@@ -42,8 +46,14 @@ public class RequestServiceImpl implements RequestService {
         }
         if (event.getInitiator().equals(user))
             throw new ConditionsViolationException("User is initiator of this event");
-        if (!event.getParticipantLimit().equals(0L) && (event.getRequests().size() == event.getParticipantLimit()))
-            throw new ConditionsViolationException("Participation limit is overflowed");
+        if (!event.getParticipantLimit().equals(0L)) {
+            List<ParticipationRequest> approvedRequests = event.getRequests().stream()
+                    .filter(r -> r.getStatus().equals(ParticipationRequest.Status.CONFIRMED))
+                    .collect(Collectors.toList());
+
+            if (approvedRequests.size() == event.getParticipantLimit())
+                throw new ConditionsViolationException("Participation limit is overflowed");
+        }
 
         ParticipationRequest participationRequest = ParticipationRequest.builder()
                 .requester(user)
@@ -90,7 +100,9 @@ public class RequestServiceImpl implements RequestService {
 
                     if (updateRequest.getRequestIds().contains(request.getId())) {
                         if (request.getStatus().equals(ParticipationRequest.Status.PENDING)){
-                            request.setStatus(ParticipationRequest.Status.valueOf(updateRequest.getStatus().toString()));
+                            request.setStatus(updateRequest.getStatus().equals(
+                                    EventRequestStatusUpdateRequest.Status.CONFIRMED) ? ParticipationRequest.Status.CONFIRMED : ParticipationRequest.Status.REJECTED
+                            );
 
                             if (request.getStatus().equals(ParticipationRequest.Status.CONFIRMED))
                                 updateResult.getConfirmedRequests().add(ParticipationRequestMapper.toDto(request));
@@ -140,6 +152,8 @@ public class RequestServiceImpl implements RequestService {
                 .orElseThrow(() -> new EntityNotExistsException(String.format("Participation request with id=%d was not found", requestId)));
 
         requestRepository.delete(request);
+
+        request.setStatus(ParticipationRequest.Status.CANCELED);
 
         return ParticipationRequestMapper.toDto(request);
     }

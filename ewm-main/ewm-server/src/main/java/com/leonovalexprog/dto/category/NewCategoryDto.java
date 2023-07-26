@@ -1,4 +1,4 @@
-package com.leonovalexprog.dto;
+package com.leonovalexprog.dto.category;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
