@@ -7,11 +7,12 @@ import com.leonovalexprog.model.ParticipationRequest;
 import lombok.experimental.UtilityClass;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @UtilityClass
 public class EventMapper {
-    public static EventDto toDto(Event event) {
+    public static EventDto toDto(Event event, Long views) {
         return EventDto.builder()
                 .id(event.getId())
                 .annotation(event.getAnnotation())
@@ -28,17 +29,17 @@ public class EventMapper {
                 .requestModeration(event.getRequestModeration())
                 .state(event.getState())
                 .title(event.getTitle())
-                .views(event.getViews())
+                .views(views)
                 .build();
     }
 
-    public static List<EventDto> toDto(List<Event> events) {
+    public static List<EventDto> toDto(List<Event> events, Map<Long, Long> views) {
         return events.stream()
-                .map(EventMapper::toDto)
+                .map(event -> EventMapper.toDto(event, views.get(event.getId())))
                 .collect(Collectors.toList());
     }
 
-    public static EventShortDto toShortDto(Event event) {
+    public static EventShortDto toShortDto(Event event, Long views) {
         return EventShortDto.builder()
                 .annotation(event.getAnnotation())
                 .category(CategoryMapper.toDto(event.getCategory()))
@@ -48,13 +49,13 @@ public class EventMapper {
                 .initiator(UserMapper.toShortDto(event.getInitiator()))
                 .paid(event.getPaid())
                 .title(event.getTitle())
-                .views(event.getViews())
+                .views(views)
                 .build();
     }
 
-    public static List<EventShortDto> toShortDto(List<Event> events) {
+    public static List<EventShortDto> toShortDto(List<Event> events, Map<Long, Long> views) {
         return events.stream()
-                .map(EventMapper::toShortDto)
+                .map(event -> EventMapper.toShortDto(event, views.get(event.getId())))
                 .collect(Collectors.toList());
     }
 }

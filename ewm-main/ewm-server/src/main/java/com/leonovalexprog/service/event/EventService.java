@@ -2,9 +2,11 @@ package com.leonovalexprog.service.event;
 
 import com.leonovalexprog.dto.event.*;
 import com.leonovalexprog.dto.request.ParticipationRequestDto;
+import com.leonovalexprog.model.Event;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 public interface EventService {
 
@@ -25,4 +27,8 @@ public interface EventService {
     List<EventShortDto> getEventsByPublic(String text, List<Long> categories, Boolean paid, LocalDateTime rangeStart, LocalDateTime rangeEnd, boolean onlyAvailable, String sort, int from, int size);
 
     EventDto getEventByPublic(Long eventId);
+
+    Long getEventViews(Event event);
+
+    Map<Long, Long> getEventsViews(List<Event> events);
 }

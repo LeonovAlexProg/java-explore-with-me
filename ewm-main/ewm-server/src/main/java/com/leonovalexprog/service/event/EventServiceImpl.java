@@ -1,6 +1,7 @@
 package com.leonovalexprog.service.event;
 
 import com.leonovalexprog.client.StatsClient;
+import com.leonovalexprog.dto.RequestResponseDto;
 import com.leonovalexprog.dto.event.*;
 import com.leonovalexprog.dto.request.ParticipationRequestDto;
 import com.leonovalexprog.exception.exceptions.*;
@@ -19,9 +20,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -69,12 +68,11 @@ public class EventServiceImpl implements EventService {
                 .requestModeration(newEventDto.getRequestModeration())
                 .state(Event.State.PENDING)
                 .title(newEventDto.getTitle())
-                .views(0L)
                 .build();
 
         try {
             Event newEvent = eventsRepository.saveAndFlush(event);
-            return EventMapper.toDto(newEvent);
+            return EventMapper.toDto(newEvent, getEventViews(newEvent));
         } catch (DataIntegrityViolationException exception) {
             throw new FieldValueExistsException(exception.getMessage());
         }
@@ -87,7 +85,7 @@ public class EventServiceImpl implements EventService {
 
         List<Event> userEvents = eventsRepository.findAllByInitiatorId(userId, PageRequest.of(from / size, size));
 
-        return EventMapper.toShortDto(userEvents);
+        return EventMapper.toShortDto(userEvents, getEventsViews(userEvents));
     }
 
     @Override
@@ -98,7 +96,7 @@ public class EventServiceImpl implements EventService {
         Event event = eventsRepository.findById(eventId)
                 .orElseThrow(() -> new EntityNotExistsException(String.format("Event with id=%d was not found", eventId)));
 
-        return EventMapper.toDto(event);
+        return EventMapper.toDto(event, getEventViews(event));
     }
 
     @Override
@@ -166,7 +164,7 @@ public class EventServiceImpl implements EventService {
 
         try {
             Event newEvent = eventsRepository.saveAndFlush(event);
-            return EventMapper.toDto(newEvent);
+            return EventMapper.toDto(newEvent, getEventViews(newEvent));
         } catch (DataIntegrityViolationException exception) {
             throw new FieldValueExistsException(exception.getMessage());
         }
@@ -226,7 +224,7 @@ public class EventServiceImpl implements EventService {
             }
         }
 
-        return EventMapper.toDto(events);
+        return EventMapper.toDto(events, getEventsViews(events));
     }
 
     @Override
@@ -293,7 +291,7 @@ public class EventServiceImpl implements EventService {
 
         try {
             Event newEvent = eventsRepository.saveAndFlush(event);
-            return EventMapper.toDto(newEvent);
+            return EventMapper.toDto(newEvent,getEventViews(newEvent));
         } catch (DataIntegrityViolationException exception) {
             throw new FieldValueExistsException(exception.getMessage());
         }
@@ -349,7 +347,7 @@ public class EventServiceImpl implements EventService {
         else
             events = eventsRepository.findPublic(textFilter, categoriesFilter, paidFilter, rangeStartFilter, rangeEndFilter, pageable);
 
-        return EventMapper.toShortDto(events);
+        return EventMapper.toShortDto(events, getEventsViews(events));
     }
 
     @Override
@@ -360,22 +358,46 @@ public class EventServiceImpl implements EventService {
         if (!event.getState().equals(Event.State.PUBLISHED))
             throw new EntityNotExistsException("Event must be published");
 
-        Long eventUniqueViews = (long) statsClient.getRequestsStat(
-                LocalDateTime.now().minusYears(100),
-                LocalDateTime.now().plusYears(100),
-                List.of("/events/" + eventId),
-                true
-        ).get(0).getHits();
-
-        if (event.getViews() < eventUniqueViews)
-            event.setViews(eventUniqueViews);
-
         try {
             eventsRepository.saveAndFlush(event);
         } catch (DataIntegrityViolationException exception) {
             throw new FieldValueExistsException(exception.getMessage());
         }
 
-        return EventMapper.toDto(event);
+        return EventMapper.toDto(event, getEventViews(event));
+    }
+
+    public Long getEventViews(Event event) {
+        if (event.getId() != null) {
+            List<RequestResponseDto> eventRequests = statsClient.getRequestsStat(
+                    LocalDateTime.now().minusYears(100),
+                    LocalDateTime.now().plusYears(100),
+                    List.of("/events/" + event.getId()),
+                    true);
+
+            if (!eventRequests.isEmpty())
+                return (long) eventRequests.get(0).getHits();
+        }
+
+        return 0L;
+    }
+
+    public Map<Long, Long> getEventsViews(List<Event> events) {
+        List<String> eventsUri = events.stream()
+                .map(e -> "/events/" + e.getId())
+                .collect(Collectors.toList());
+
+        List<RequestResponseDto> eventsRequests = statsClient.getRequestsStat(
+                LocalDateTime.now().minusYears(100),
+                LocalDateTime.now().plusYears(100),
+                eventsUri,
+                true);
+
+        if (!events.isEmpty()) {
+            return eventsRequests.stream()
+                    .collect(Collectors.toMap(r -> Long.valueOf(r.getUri().substring(8)), r -> (long) r.getHits()));
+        } else {
+            return Collections.emptyMap();
+        }
     }
 }

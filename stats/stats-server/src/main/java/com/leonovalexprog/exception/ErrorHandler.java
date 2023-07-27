@@ -26,17 +26,4 @@ public class ErrorHandler {
                 LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
         );
     }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorResponse otherExceptionsHandler(final Exception e) {
-        log.warn(e.getMessage());
-
-        return new ErrorResponse(
-                HttpStatus.INTERNAL_SERVER_ERROR.name(),
-                "Internal server error",
-                e.getMessage(),
-                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
-        );
-    }
 }

@@ -10,6 +10,7 @@ import com.leonovalexprog.model.Compilation;
 import com.leonovalexprog.model.Event;
 import com.leonovalexprog.repository.CompilationRepository;
 import com.leonovalexprog.repository.EventsRepository;
+import com.leonovalexprog.service.event.EventService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
@@ -17,12 +18,16 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class CompilationServiceImpl implements CompilationService {
     private final CompilationRepository compilationRepository;
     private final EventsRepository eventsRepository;
+
+    private final EventService eventService;
 
     @Override
     public List<CompilationDto> getCompilations(Boolean pinned, int from, int size) {
@@ -35,7 +40,7 @@ public class CompilationServiceImpl implements CompilationService {
 
         List<Compilation> compilations = compilationRepository.findAllWherePinned(pinnedFilter, PageRequest.of(from / size, size));
 
-        return CompilationMapper.toDto(compilations);
+        return CompilationMapper.toDto(compilations, mapEventsViewsByCompilations(compilations));
     }
 
     @Override
@@ -43,7 +48,7 @@ public class CompilationServiceImpl implements CompilationService {
         Compilation compilation = compilationRepository.findById(compId)
                 .orElseThrow(() -> new EntityNotExistsException(String.format("Compilation with id=%d was not found", compId)));
 
-        return CompilationMapper.toDto(compilation);
+        return CompilationMapper.toDto(compilation, getEventsViewsByCompilation(compilation));
     }
 
     @Override
@@ -61,7 +66,7 @@ public class CompilationServiceImpl implements CompilationService {
 
         try {
             Compilation newCompilation = compilationRepository.saveAndFlush(compilation);
-            return CompilationMapper.toDto(newCompilation);
+            return CompilationMapper.toDto(newCompilation, getEventsViewsByCompilation(newCompilation));
         } catch (DataIntegrityViolationException exception) {
             throw new FieldValueExistsException(exception.getMessage());
         }
@@ -93,9 +98,18 @@ public class CompilationServiceImpl implements CompilationService {
 
         try {
             Compilation newCompilation = compilationRepository.saveAndFlush(compilation);
-            return CompilationMapper.toDto(newCompilation);
+            return CompilationMapper.toDto(newCompilation, getEventsViewsByCompilation(newCompilation));
         } catch (DataIntegrityViolationException exception) {
             throw new FieldValueExistsException(exception.getMessage());
         }
+    }
+
+    public Map<Long, Long> getEventsViewsByCompilation(Compilation compilation) {
+        return eventService.getEventsViews(compilation.getEvents());
+    }
+
+    public Map<Long, Map<Long, Long>> mapEventsViewsByCompilations(List<Compilation> compilations) {
+        return compilations.stream()
+                .collect(Collectors.toMap(Compilation::getId, this::getEventsViewsByCompilation));
     }
 }
