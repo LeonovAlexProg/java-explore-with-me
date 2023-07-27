@@ -15,12 +15,12 @@ import java.util.List;
 @NoArgsConstructor
 public class UpdateCompilationRequest {
     @Nullable
-    List<Long> events;
+    private List<Long> events;
 
     @Nullable
-    Boolean pinned;
+    private Boolean pinned;
 
     @Nullable
     @Size(min = 1, max = 50, message = "Title size is out of bounds")
-    String title;
+    private String title;
 }

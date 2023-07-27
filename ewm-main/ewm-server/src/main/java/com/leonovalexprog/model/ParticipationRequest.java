@@ -4,7 +4,6 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 @Entity
 @Table(name = "Participation_Requests")
@@ -36,18 +35,5 @@ public class ParticipationRequest {
         CONFIRMED,
         REJECTED,
         CANCELED
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ParticipationRequest that = (ParticipationRequest) o;
-        return Objects.equals(id, that.id) && Objects.equals(created, that.created) && Objects.equals(event, that.event) && Objects.equals(requester, that.requester) && Objects.equals(status, that.status);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, created, event, requester, status);
     }
 }
