@@ -14,6 +14,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -23,6 +24,7 @@ public class CategoryServiceImpl implements CategoryService {
     private final EventsRepository eventsRepository;
 
     @Override
+    @Transactional
     public CategoryDto newCategory(NewCategoryDto newCategoryDto) {
         Category category = Category.builder()
                 .name(newCategoryDto.getName())
@@ -37,6 +39,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Transactional
     public void deleteCategory(long categoryId) {
         if (!categoriesRepository.existsById(categoryId)) {
             throw new EntityNotExistsException(String.format("Category with id=%d was not found", categoryId));
@@ -49,6 +52,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Transactional
     public CategoryDto updateCategory(long categoryId, NewCategoryDto newCategoryDto) {
         Category category = categoriesRepository.findById(categoryId)
                 .orElseThrow(() -> new EntityNotExistsException("Category with id=%d was not found"));

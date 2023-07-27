@@ -19,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -34,6 +35,7 @@ public class EventServiceImpl implements EventService {
     private final StatsClient statsClient;
 
     @Override
+    @Transactional
     public EventDto newEvent(long userId, NewEventDto newEventDto) {
         if (newEventDto.getEventDate().isBefore(LocalDateTime.now().plusHours(2))) {
             throw new DataValidationFailException("Field: eventDate. Error: должно содержать дату, которая еще не наступила. Value: " +
@@ -100,6 +102,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @Transactional
     public EventDto updateEvent(long userId, long eventId, UpdateEventUserRequest newEventDto) {
         if (newEventDto.getEventDate() != null) {
             if (newEventDto.getEventDate().isBefore(LocalDateTime.now().plusHours(2))) {
@@ -228,6 +231,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @Transactional
     public EventDto updateEventAdmin(long eventId, UpdateEventAdminRequest updateDto) {
         Event event = eventsRepository.findById(eventId)
                 .orElseThrow(() -> new EntityNotExistsException(String.format("Event with id=%d was not found", eventId)));

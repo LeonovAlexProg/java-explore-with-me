@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,7 @@ public class RequestServiceImpl implements RequestService {
     private final UserRepository userRepository;
 
     @Override
+    @Transactional
     public ParticipationRequestDto newParticipation(long userId, long eventId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotExistsException(String.format("User with id=%d was not found", userId)));
@@ -74,6 +76,7 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
+    @Transactional
     public EventRequestStatusUpdateResult updateEventRequests(long userId, long eventId, EventRequestStatusUpdateRequest updateRequest) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotExistsException(String.format("User with id=%d was not found", userId)));
