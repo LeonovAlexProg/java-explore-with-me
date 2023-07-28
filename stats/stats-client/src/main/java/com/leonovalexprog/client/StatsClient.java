@@ -2,10 +2,13 @@ package com.leonovalexprog.client;
 
 import com.leonovalexprog.dto.RequestRegisterDto;
 import com.leonovalexprog.dto.RequestResponseDto;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -14,6 +17,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+@Component
+@Slf4j
 public class StatsClient {
     private final String statsServerUrl;
     private final RestTemplate restTemplate;
@@ -23,8 +28,20 @@ public class StatsClient {
         restTemplate = new RestTemplate();
     }
 
-    public void registerRequest(RequestRegisterDto requestRegisterDto) {
-        restTemplate.postForObject(statsServerUrl + "/hit", requestRegisterDto, Object.class);
+    public void registerRequest(String app, HttpServletRequest request) {
+        RequestRegisterDto registerDto = RequestRegisterDto.builder()
+                .app(app)
+                .uri(request.getRequestURI())
+                .ip(request.getRemoteAddr())
+                .datetime(LocalDateTime.now())
+                .build();
+        log.info("Send request data to stats-service (app = {}, uri = {}, ip = {}, timestamp = {})",
+                registerDto.getApp(),
+                registerDto.getUri(),
+                registerDto.getIp(),
+                registerDto.getDatetime());
+
+        restTemplate.postForObject(statsServerUrl + "/hit", registerDto, Object.class);
     }
 
     public List<RequestResponseDto> getRequestsStat(LocalDateTime start,
