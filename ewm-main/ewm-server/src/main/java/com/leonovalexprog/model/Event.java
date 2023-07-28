@@ -42,8 +42,12 @@ public class Event {
     private User initiator;
 
     @OneToOne
-    @JoinColumn(name = "location_id", nullable = false)
+    @JoinColumn(name = "event_location_id", nullable = false)
     private EventLocation eventLocation;
+
+    @ManyToOne
+    private Location location;
+
     @Column(nullable = false)
     private Boolean paid;
 

@@ -10,7 +10,7 @@ import com.leonovalexprog.mapper.ParticipationRequestMapper;
 import com.leonovalexprog.model.*;
 import com.leonovalexprog.repository.CategoriesRepository;
 import com.leonovalexprog.repository.EventsRepository;
-import com.leonovalexprog.repository.LocationRepository;
+import com.leonovalexprog.repository.EventLocationRepository;
 import com.leonovalexprog.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -30,7 +30,7 @@ public class EventServiceImpl implements EventService {
     private final EventsRepository eventsRepository;
     private final UserRepository userRepository;
     private final CategoriesRepository categoryRepository;
-    private final LocationRepository locationRepository;
+    private final EventLocationRepository eventLocationRepository;
 
     private final StatsClient statsClient;
 
@@ -51,7 +51,7 @@ public class EventServiceImpl implements EventService {
                 .lat(newEventDto.getLocation().getLat())
                 .lon(newEventDto.getLocation().getLon())
                 .build();
-        EventLocation newEventLocation = locationRepository.save(eventLocation);
+        EventLocation newEventLocation = eventLocationRepository.save(eventLocation);
 
 
         Event event = Event.builder()
@@ -74,7 +74,7 @@ public class EventServiceImpl implements EventService {
         try {
             Event newEvent = eventsRepository.saveAndFlush(event);
             newEventLocation.setEvent(newEvent);
-            locationRepository.saveAndFlush(newEventLocation);
+            eventLocationRepository.saveAndFlush(newEventLocation);
             return EventMapper.toDto(newEvent, getEventViews(newEvent));
         } catch (DataIntegrityViolationException exception) {
             throw new FieldValueExistsException(exception.getMessage());
@@ -138,13 +138,13 @@ public class EventServiceImpl implements EventService {
             event.setEventDate(newEventDto.getEventDate());
 
         if (newEventDto.getLocation() != null) {
-            if (!locationRepository.existsByLatAndLon(newEventDto.getLocation().getLat(), newEventDto.getLocation().getLon())) {
+            if (!eventLocationRepository.existsByLatAndLon(newEventDto.getLocation().getLat(), newEventDto.getLocation().getLon())) {
                 EventLocation eventLocation = EventLocation.builder()
                         .lat(newEventDto.getLocation().getLat())
                         .lon(newEventDto.getLocation().getLon())
                         .event(event)
                         .build();
-                EventLocation newEventLocation = locationRepository.save(eventLocation);
+                EventLocation newEventLocation = eventLocationRepository.save(eventLocation);
 
                 event.setEventLocation(newEventLocation);
             }
@@ -264,14 +264,14 @@ public class EventServiceImpl implements EventService {
             event.setEventDate(updateDto.getEventDate());
         }
         if (updateDto.getLocation() != null) {
-            EventLocation eventLocation = locationRepository.findByLatAndLon(updateDto.getLocation().getLat(), updateDto.getLocation().getLon());
+            EventLocation eventLocation = eventLocationRepository.findByLatAndLon(updateDto.getLocation().getLat(), updateDto.getLocation().getLon());
             if (eventLocation == null) {
                 EventLocation newEventLocation = EventLocation.builder()
                         .lat(updateDto.getLocation().getLat())
                         .lon(updateDto.getLocation().getLon())
                         .build();
 
-                newEventLocation = locationRepository.save(newEventLocation);
+                newEventLocation = eventLocationRepository.save(newEventLocation);
 
                 event.setEventLocation(newEventLocation);
             } else {

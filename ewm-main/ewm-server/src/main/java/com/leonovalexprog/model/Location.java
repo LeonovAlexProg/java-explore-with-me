@@ -3,18 +3,22 @@ package com.leonovalexprog.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
-@Table(name = "event_locations")
+@Table(name = "locations")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class EventLocation {
+public class Location {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
+    private String name;
 
     @Column(nullable = false)
     private Float lat;
@@ -22,7 +26,9 @@ public class EventLocation {
     @Column(nullable = false)
     private Float lon;
 
-    @OneToOne
-    @JoinColumn(name = "event_id")
-    private Event event;
+    @Column(nullable = false)
+    private Float rad;
+
+    @OneToMany(mappedBy = "location")
+    private List<Event> events;
 }
