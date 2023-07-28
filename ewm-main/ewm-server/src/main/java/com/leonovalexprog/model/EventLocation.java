@@ -11,7 +11,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Location {
+public class EventLocation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,4 +21,8 @@ public class Location {
 
     @Column(nullable = false)
     private Float lon;
+
+    @OneToOne
+    @JoinColumn(name = "event_id")
+    private Event event;
 }

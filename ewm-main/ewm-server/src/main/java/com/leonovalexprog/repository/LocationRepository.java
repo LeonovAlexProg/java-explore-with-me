@@ -1,10 +1,10 @@
 package com.leonovalexprog.repository;
 
-import com.leonovalexprog.model.Location;
+import com.leonovalexprog.model.EventLocation;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface LocationRepository extends JpaRepository<Location, Long> {
+public interface LocationRepository extends JpaRepository<EventLocation, Long> {
     Boolean existsByLatAndLon(float lat, float lon);
 
-    Location findByLatAndLon(Float lat, Float lon);
+    EventLocation findByLatAndLon(Float lat, Float lon);
 }

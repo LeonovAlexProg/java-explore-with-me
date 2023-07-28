@@ -43,7 +43,7 @@ public class Event {
 
     @OneToOne
     @JoinColumn(name = "location_id", nullable = false)
-    private Location location;
+    private EventLocation eventLocation;
     @Column(nullable = false)
     private Boolean paid;
 
