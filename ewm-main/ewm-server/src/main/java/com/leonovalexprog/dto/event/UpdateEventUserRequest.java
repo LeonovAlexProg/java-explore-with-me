@@ -2,7 +2,7 @@ package com.leonovalexprog.dto.event;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.leonovalexprog.dto.category.CategoryDto;
-import com.leonovalexprog.dto.location.LocationDto;
+import com.leonovalexprog.dto.location.EventLocationDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -34,7 +34,7 @@ public class UpdateEventUserRequest {
     private LocalDateTime eventDate;
 
     @Nullable
-    private LocationDto location;
+    private EventLocationDto location;
 
     @Nullable
     private Boolean paid;

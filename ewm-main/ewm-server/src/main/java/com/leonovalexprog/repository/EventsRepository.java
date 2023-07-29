@@ -2,6 +2,7 @@ package com.leonovalexprog.repository;
 
 import com.leonovalexprog.model.Category;
 import com.leonovalexprog.model.Event;
+import com.leonovalexprog.model.Location;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -79,4 +80,8 @@ public interface EventsRepository extends JpaRepository<Event, Long> {
             "AND e.paid IN ?3 " +
             "AND e.eventDate BETWEEN ?4 AND ?5")
     List<Event> findPublic(String text, List<Category> categories, List<Boolean> paid, LocalDateTime rangeStartFilter, LocalDateTime rangeEndFilter, Pageable pageable);
+
+    @Query("SELECT e FROM Event AS e " +
+            "WHERE e.location IN ?1")
+    List<Event> findEventsByLocation(List<Location> locations);
 }
