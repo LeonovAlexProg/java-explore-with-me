@@ -2,6 +2,7 @@ package com.leonovalexprog.service.location;
 
 import com.leonovalexprog.dto.location.LocationDto;
 import com.leonovalexprog.dto.location.NewLocationDto;
+import com.leonovalexprog.dto.location.UpdateLocationDto;
 import com.leonovalexprog.exception.exceptions.EntityNotExistsException;
 import com.leonovalexprog.exception.exceptions.FieldValueExistsException;
 import com.leonovalexprog.mapper.LocationMapper;
@@ -72,6 +73,30 @@ public class LocationServiceImpl implements LocationService {
         }
 
         return LocationMapper.toDto(locations, mapEventsViewsByLocation(locations));
+    }
+
+    @Override
+    public LocationDto updateLocation(Long locationId, UpdateLocationDto updateLocationDto) {
+        Location location = locationRepository.findById(locationId)
+                .orElseThrow(() -> new EntityNotExistsException(String.format("Location with id=%d was not found", locationId)));
+
+        if (updateLocationDto.getName() != null)
+            location.setName(updateLocationDto.getName());
+        if (updateLocationDto.getLat() != null)
+            location.setLat(updateLocationDto.getLat());
+        if (updateLocationDto.getLon() != null)
+            location.setLon(updateLocationDto.getLon());
+        if (updateLocationDto.getRad() != null)
+            location.setRad(updateLocationDto.getRad());
+
+        Location patchedLocation;
+        try {
+            patchedLocation = locationRepository.saveAndFlush(location);
+        } catch (DataIntegrityViolationException exception) {
+            throw new FieldValueExistsException(exception.getMessage());
+        }
+
+        return LocationMapper.toDto(patchedLocation, getEventsViewsByLocation(location));
     }
 
     private List<Location> findClosestLocation(Float lat, Float lon, List<Location> locations) {

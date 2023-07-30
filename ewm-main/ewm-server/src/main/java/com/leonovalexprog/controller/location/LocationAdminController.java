@@ -1,11 +1,13 @@
 package com.leonovalexprog.controller.location;
 
+import com.leonovalexprog.dto.location.UpdateLocationDto;
 import com.leonovalexprog.dto.location.LocationDto;
 import com.leonovalexprog.dto.location.NewLocationDto;
 import com.leonovalexprog.service.location.LocationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -40,5 +42,14 @@ public class LocationAdminController {
                 lat, lon, rad, closest);
 
         return locationService.findLocations(lat, lon, rad, closest);
+    }
+
+    @PatchMapping("/{locationId}")
+    public LocationDto patchLocation(@PathVariable Long locationId,
+                                     @Validated @Valid @RequestBody UpdateLocationDto updateLocationDto) {
+        log.info("Patch location (location id = {}, name = {}, lat = {}, lon = {}, rad = {}",
+                locationId, updateLocationDto.getName(), updateLocationDto.getLat(), updateLocationDto.getLon(), updateLocationDto.getRad());
+
+        return locationService.updateLocation(locationId, updateLocationDto);
     }
 }
