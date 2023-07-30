@@ -71,7 +71,7 @@ public class LocationServiceImpl implements LocationService {
         if (lat == null && lon == null)
             locations = locationRepository.findAll();
         else {
-            if (rad == null) {
+            if (rad == 0) {
                 locations = locationRepository.findByExactCoordinates(lat, lon);
             } else {
                 locations = locationRepository.findByCoordinates(lat, lon, rad);
