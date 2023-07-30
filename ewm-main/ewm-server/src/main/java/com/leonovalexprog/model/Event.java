@@ -45,8 +45,13 @@ public class Event {
     @JoinColumn(name = "event_location_id", nullable = false)
     private EventLocation eventLocation;
 
-    @ManyToOne
-    private Location location;
+    @ManyToMany
+    @JoinTable(
+            name = "events_to_location",
+            joinColumns = @JoinColumn(name = "event_id"),
+            inverseJoinColumns = @JoinColumn(name = "location_id")
+    )
+    private List<Location> locations;
 
     @Column(nullable = false)
     private Boolean paid;

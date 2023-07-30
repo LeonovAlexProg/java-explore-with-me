@@ -82,6 +82,12 @@ public interface EventsRepository extends JpaRepository<Event, Long> {
     List<Event> findPublic(String text, List<Category> categories, List<Boolean> paid, LocalDateTime rangeStartFilter, LocalDateTime rangeEndFilter, Pageable pageable);
 
     @Query("SELECT e FROM Event AS e " +
-            "WHERE e.location IN ?1")
+            "WHERE e.locations IN ?1")
     List<Event> findEventsByLocation(List<Location> locations);
+
+    @Query("SELECT e FROM Event AS e " +
+            "WHERE (?1 - e.eventLocation.lat) * (?1 - e.eventLocation.lat) +" +
+            "(?2 - e.eventLocation.lon) * (?2 - e.eventLocation.lon) <=" +
+            "?3 * ?3")
+    List<Event> findEventsByCoorinates(Float lat, Float lon, Float rad);
 }

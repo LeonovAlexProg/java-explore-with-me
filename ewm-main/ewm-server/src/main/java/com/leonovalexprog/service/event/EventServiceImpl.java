@@ -8,10 +8,7 @@ import com.leonovalexprog.exception.exceptions.*;
 import com.leonovalexprog.mapper.EventMapper;
 import com.leonovalexprog.mapper.ParticipationRequestMapper;
 import com.leonovalexprog.model.*;
-import com.leonovalexprog.repository.CategoriesRepository;
-import com.leonovalexprog.repository.EventsRepository;
-import com.leonovalexprog.repository.EventLocationRepository;
-import com.leonovalexprog.repository.UserRepository;
+import com.leonovalexprog.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
@@ -31,6 +28,7 @@ public class EventServiceImpl implements EventService {
     private final UserRepository userRepository;
     private final CategoriesRepository categoryRepository;
     private final EventLocationRepository eventLocationRepository;
+    private final LocationRepository locationRepository;
 
     private final StatsClient statsClient;
 
@@ -53,6 +51,7 @@ public class EventServiceImpl implements EventService {
                 .build();
         EventLocation newEventLocation = eventLocationRepository.save(eventLocation);
 
+        List<Location> locations = locationRepository.findByEventCoordinates(newEventLocation.getLat(), newEventLocation.getLon());
 
         Event event = Event.builder()
                 .annotation(newEventDto.getAnnotation())
@@ -63,6 +62,7 @@ public class EventServiceImpl implements EventService {
                 .eventDate(newEventDto.getEventDate())
                 .initiator(eventInitiator)
                 .eventLocation(newEventLocation)
+                .locations(locations)
                 .paid(newEventDto.getPaid())
                 .participantLimit(newEventDto.getParticipantLimit())
                 .publishedOn(null)
@@ -73,8 +73,13 @@ public class EventServiceImpl implements EventService {
 
         try {
             Event newEvent = eventsRepository.saveAndFlush(event);
+
             newEventLocation.setEvent(newEvent);
             eventLocationRepository.saveAndFlush(newEventLocation);
+
+            locations.forEach(location -> location.getEvents().add(newEvent));
+            locationRepository.saveAllAndFlush(locations);
+
             return EventMapper.toDto(newEvent, getEventViews(newEvent));
         } catch (DataIntegrityViolationException exception) {
             throw new FieldValueExistsException(exception.getMessage());

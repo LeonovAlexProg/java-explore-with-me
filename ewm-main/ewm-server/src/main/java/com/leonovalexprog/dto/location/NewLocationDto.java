@@ -27,5 +27,6 @@ public class NewLocationDto {
     private Float lon;
 
     @NotNull(message = "Rad is mandatory")
+    @Min(value = 0, message = "Rad can't be lower then 0")
     private Float rad;
 }

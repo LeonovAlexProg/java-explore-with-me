@@ -6,6 +6,7 @@ import com.leonovalexprog.dto.location.UpdateLocationDto;
 import com.leonovalexprog.exception.exceptions.EntityNotExistsException;
 import com.leonovalexprog.exception.exceptions.FieldValueExistsException;
 import com.leonovalexprog.mapper.LocationMapper;
+import com.leonovalexprog.model.Event;
 import com.leonovalexprog.model.Location;
 import com.leonovalexprog.repository.EventsRepository;
 import com.leonovalexprog.repository.LocationRepository;
@@ -14,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -27,6 +30,7 @@ public class LocationServiceImpl implements LocationService {
     private final EventService eventService;
 
     @Override
+    @Transactional
     public LocationDto createNewLocation(NewLocationDto newLocationDto) {
         Location location = Location.builder()
                 .name(newLocationDto.getName())
@@ -35,16 +39,21 @@ public class LocationServiceImpl implements LocationService {
                 .rad(newLocationDto.getRad())
                 .build();
 
-        Location newLocation;
+        List<Event> eventsInLocation = eventsRepository.findEventsByCoorinates(newLocationDto.getLat(), newLocationDto.getLon(), newLocationDto.getRad());
 
         try {
-            newLocation = locationRepository.saveAndFlush(location);
+            Location newLocation = locationRepository.save(location);
+
+            eventsInLocation.forEach(event -> event.getLocations().add(newLocation));
+            newLocation.setEvents(eventsInLocation);
+
+            locationRepository.saveAndFlush(newLocation);
+            eventsRepository.saveAllAndFlush(eventsInLocation);
+
+            return LocationMapper.toDto(newLocation, getEventsViewsByLocation(location));
         } catch (DataIntegrityViolationException exception) {
             throw new FieldValueExistsException(exception.getMessage());
         }
-
-        //TODO подумать над тем, как добавляются события, без локации или с
-        return LocationMapper.toDto(newLocation, getEventsViewsByLocation(location));
     }
 
     @Override
@@ -119,7 +128,10 @@ public class LocationServiceImpl implements LocationService {
     }
 
     public Map<Long, Long> getEventsViewsByLocation(Location location) {
-        return eventService.getEventsViews(location.getEvents());
+        if (location.getEvents() != null)
+            return eventService.getEventsViews(location.getEvents());
+        else
+            return Collections.emptyMap();
     }
 
     public Map<Long, Map<Long, Long>> mapEventsViewsByLocation(List<Location> locations) {

@@ -29,6 +29,6 @@ public class Location {
     @Column(nullable = false)
     private Float rad;
 
-    @OneToMany(mappedBy = "location")
+    @ManyToMany
     private List<Event> events;
 }

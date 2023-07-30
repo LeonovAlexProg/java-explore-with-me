@@ -13,6 +13,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LocationDto {
+    private Long id;
+
     private String name;
 
     private Float lat;
