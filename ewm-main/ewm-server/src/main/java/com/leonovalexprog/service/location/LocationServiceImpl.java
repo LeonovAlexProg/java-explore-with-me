@@ -89,7 +89,7 @@ public class LocationServiceImpl implements LocationService {
         Location location = locationRepository.findById(locationId)
                 .orElseThrow(() -> new EntityNotExistsException(String.format("Location with id=%d was not found", locationId)));
 
-        Boolean isCoordinatesUpdated = false;
+        boolean isCoordinatesUpdated = false;
 
         if (updateLocationDto.getName() != null) {
             location.setName(updateLocationDto.getName());
@@ -108,13 +108,15 @@ public class LocationServiceImpl implements LocationService {
         }
 
         if (isCoordinatesUpdated) {
-            List<Event> locationEvents = eventsRepository.findEventsByCoorinates(
-                    updateLocationDto.getLat(),
-                    updateLocationDto.getLon(),
-                    updateLocationDto.getRad()
-            );
+            List<Event> oldEventsInLocation = location.getEvents();
+            oldEventsInLocation.forEach(event -> event.setLocations(locationRepository.findByExactCoordinates(
+                            event.getEventLocation().getLat(),
+                            event.getEventLocation().getLon()
+                    )));
+            eventsRepository.saveAll(oldEventsInLocation);
 
-
+            List<Event> newEventsInLocation = eventsRepository.findEventsByCoorinates(location.getLat(), location.getLon(), location.getRad());
+            location.setEvents(newEventsInLocation);
         }
 
         try {
