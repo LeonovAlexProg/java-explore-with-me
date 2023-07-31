@@ -155,6 +155,7 @@ public class LocationServiceImpl implements LocationService {
         }).get();
 
         return List.of(closestLocation);
+
     }
 
     private Double calculateDistanceBetweenCoordinates(float lat1, float lon1, float lat2, float lon2) {
