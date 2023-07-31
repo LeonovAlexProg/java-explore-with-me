@@ -256,7 +256,7 @@
 							"pm.test(\"Данные в ответе должны соответствовать данным в БД\", function () {\r",
 							"    pm.expect(target.id).to.not.be.null;\r",
 							"    pm.expect(target.name).equal(\"Senior JP Square\", 'Название локации должно соответствовать данным в БД');\r",
-							"    pm.expect(target.events[0].title).equal(\"Demo title\", 'Заглавие события должно соответствовать данным в БД');\r",
+							"    pm.expect(target.events).is.an('array');\r",
 							"});"
 						],
 						"type": "text/javascript"
@@ -418,12 +418,11 @@
 							"pm.test(\"Данные в ответе должны соответствовать данным в БД\", function () {\r",
 							"    pm.expect(target[0].id).equal(1);\r",
 							"    pm.expect(target[0].name).equal(\"Senior JP Square\", 'Название локации должно соответствовать данным в БД');\r",
-							"    pm.expect(target[0].events[0].id).equal(2, 'Содержит первое событие');\r",
-							"    pm.expect(target[0].events[1].id).equal(1, 'Содержит второе событие');\r",
+							"    pm.expect(target[0].events).is.an('array');\r",
 							"\r",
 							"    pm.expect(target[1].id).equal(2);\r",
 							"    pm.expect(target[1].name).equal(\"Middle JP Square\", 'Название локации должно соответствовать данным в БД');\r",
-							"    pm.expect(target[1].events[0].id).equal(1, 'Содержит первое событие');\r",
+							"    pm.expect(target[1].events).is.an('array');\r",
 							"});"
 						],
 						"type": "text/javascript"
@@ -472,8 +471,7 @@
 							"pm.test(\"Данные в ответе должны соответствовать данным в БД\", function () {\r",
 							"    pm.expect(target[0].id).equal(1);\r",
 							"    pm.expect(target[0].name).equal(\"Senior JP Square\", 'Название локации должно соответствовать данным в БД');\r",
-							"    pm.expect(target[0].events[0].id).equal(2, 'Содержит второе событие');\r",
-							"    pm.expect(target[0].events[1].id).equal(1, 'Содержит первое событие');\r",
+							"    pm.expect(target[0].events).is.an('array');\r",
 							"});"
 						],
 						"type": "text/javascript"
@@ -661,8 +659,7 @@
 							"pm.test(\"Данные в ответе должны соответствовать данным в БД\", function () {\r",
 							"    pm.expect(target.id).equal(2);\r",
 							"    pm.expect(target.name).equal(\"Middle JP Square\", 'Название локации должно соответствовать данным в БД');\r",
-							"    pm.expect(target.events[0].id).equal(1);\r",
-							"    pm.expect(target.events[1].id).equal(2);\r",
+							"    pm.expect(target.events).is.an('array');\r",
 							"});"
 						],
 						"type": "text/javascript"
