@@ -13,7 +13,7 @@ public interface LocationRepository extends JpaRepository<Location, Long> {
     List<Location> findByExactCoordinates(Float lat, Float lon);
 
     @Query("SELECT l FROM Location AS l " +
-            "WHERE (l.lat * l.lat) + (l.lon * l.lon) <= (l.rad * l.rad)")
+            "WHERE (?1 - l.lat) * (?1 - l.lat) + (?2 - l.lon) * (?2 - l.lon) <= (?3 * ?3)")
     List<Location> findByCoordinates(Float lat, Float lon, Float rad);
 
     @Query("SELECT l FROM Location AS l " +

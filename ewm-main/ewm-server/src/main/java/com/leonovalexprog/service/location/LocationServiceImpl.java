@@ -120,11 +120,25 @@ public class LocationServiceImpl implements LocationService {
     }
 
     private Double calculateDistanceBetweenLocations(Float lat, Float lon, Location location) {
-        return Math.acos(
-                Math.sin(lat) * Math.sin(location.getLat()) +
-                Math.cos(lat) * Math.cos(location.getLat()) *
-                Math.cos(lon - location.getLon())
-        );
+        float lat1 = lat;
+        float lon1 = lon;
+        float lat2 = location.getLat();
+        float lon2 = location.getLon();
+
+        if ((lat1 == lat2) && (lon1 == lon2)) {
+            return 0.0;
+        }
+        else {
+            double theta = lon1 - lon2;
+            double dist = Math.sin(Math.toRadians(lat1)) * Math.sin(Math.toRadians(lat2)) + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) * Math.cos(Math.toRadians(theta));
+            dist = Math.acos(dist);
+            dist = Math.toDegrees(dist);
+            dist = dist * 60 * 1.1515;
+
+            dist = dist * 1.609344;
+
+            return (dist);
+        }
     }
 
     public Map<Long, Long> getEventsViewsByLocation(Location location) {
