@@ -85,27 +85,44 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public LocationDto updateLocation(Long locationId, UpdateLocationDto updateLocationDto) {
+    public LocationDto  updateLocation(Long locationId, UpdateLocationDto updateLocationDto) {
         Location location = locationRepository.findById(locationId)
                 .orElseThrow(() -> new EntityNotExistsException(String.format("Location with id=%d was not found", locationId)));
 
-        if (updateLocationDto.getName() != null)
-            location.setName(updateLocationDto.getName());
-        if (updateLocationDto.getLat() != null)
-            location.setLat(updateLocationDto.getLat());
-        if (updateLocationDto.getLon() != null)
-            location.setLon(updateLocationDto.getLon());
-        if (updateLocationDto.getRad() != null)
-            location.setRad(updateLocationDto.getRad());
+        Boolean isCoordinatesUpdated = false;
 
-        Location patchedLocation;
+        if (updateLocationDto.getName() != null) {
+            location.setName(updateLocationDto.getName());
+        }
+        if (updateLocationDto.getLat() != null) {
+            location.setLat(updateLocationDto.getLat());
+            isCoordinatesUpdated = true;
+        }
+        if (updateLocationDto.getLon() != null) {
+            location.setLon(updateLocationDto.getLon());
+            isCoordinatesUpdated = true;
+        }
+        if (updateLocationDto.getRad() != null) {
+            location.setRad(updateLocationDto.getRad());
+            isCoordinatesUpdated = true;
+        }
+
+        if (isCoordinatesUpdated) {
+            List<Event> locationEvents = eventsRepository.findEventsByCoorinates(
+                    updateLocationDto.getLat(),
+                    updateLocationDto.getLon(),
+                    updateLocationDto.getRad()
+            );
+
+
+        }
+
         try {
-            patchedLocation = locationRepository.saveAndFlush(location);
+            Location patchedLocation = locationRepository.saveAndFlush(location);
+        return LocationMapper.toDto(patchedLocation, getEventsViewsByLocation(location));
         } catch (DataIntegrityViolationException exception) {
             throw new FieldValueExistsException(exception.getMessage());
         }
-
-        return LocationMapper.toDto(patchedLocation, getEventsViewsByLocation(location));
     }
 
     private List<Location> findClosestLocation(Float lat, Float lon, List<Location> locations) {
