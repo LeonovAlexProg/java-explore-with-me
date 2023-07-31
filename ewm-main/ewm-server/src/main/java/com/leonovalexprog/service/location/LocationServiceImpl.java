@@ -45,6 +45,7 @@ public class LocationServiceImpl implements LocationService {
             Location newLocation = locationRepository.save(location);
 
             eventsInLocation.forEach(event -> event.getLocations().add(newLocation));
+            sortEventsByClosest(eventsInLocation, newLocation);
             newLocation.setEvents(eventsInLocation);
 
             locationRepository.saveAndFlush(newLocation);
@@ -60,6 +61,7 @@ public class LocationServiceImpl implements LocationService {
     public LocationDto findExactLocation(long locationId) {
         Location location = locationRepository.findById(locationId)
                 .orElseThrow(() -> new EntityNotExistsException(String.format("Location with id=%d was not found", locationId)));
+        sortEventsByClosest(location.getEvents(), location);
 
         return LocationMapper.toDto(location, getEventsViewsByLocation(location));
     }
@@ -80,6 +82,8 @@ public class LocationServiceImpl implements LocationService {
                     locations = this.findClosestLocation(lat, lon, locations);
             }
         }
+
+        locations.forEach(l -> sortEventsByClosest(l.getEvents(), l));
 
         return LocationMapper.toDto(locations, mapEventsViewsByLocation(locations));
     }
@@ -127,10 +131,25 @@ public class LocationServiceImpl implements LocationService {
         }
     }
 
+    private void sortEventsByClosest(List<Event> events, Location location) {
+        events.sort((Event e1, Event e2) -> {
+            Double firstDistance = calculateDistanceBetweenCoordinates(
+                    e1.getEventLocation().getLat(), e1.getEventLocation().getLon(),
+                    location.getLat(), location.getLon()
+            );
+            Double secondDistance = calculateDistanceBetweenCoordinates(
+                    e2.getEventLocation().getLat(), e2.getEventLocation().getLon(),
+                    location.getLat(), location.getLon()
+            );
+
+            return firstDistance.compareTo(secondDistance);
+        });
+    }
+
     private List<Location> findClosestLocation(Float lat, Float lon, List<Location> locations) {
         Location closestLocation = locations.stream().min((o1, o2) -> {
-            Double firstDistance = calculateDistanceBetweenLocations(lat, lon, o1);
-            Double secondDistance = calculateDistanceBetweenLocations(lat, lon, o2);
+            Double firstDistance = calculateDistanceBetweenCoordinates(lat, lon, o1.getLat(), o1.getLon());
+            Double secondDistance = calculateDistanceBetweenCoordinates(lat, lon, o2.getLat(), o2.getLon());
 
             return firstDistance.compareTo(secondDistance);
         }).get();
@@ -138,11 +157,7 @@ public class LocationServiceImpl implements LocationService {
         return List.of(closestLocation);
     }
 
-    private Double calculateDistanceBetweenLocations(Float lat, Float lon, Location location) {
-        float lat1 = lat;
-        float lon1 = lon;
-        float lat2 = location.getLat();
-        float lon2 = location.getLon();
+    private Double calculateDistanceBetweenCoordinates(float lat1, float lon1, float lat2, float lon2) {
 
         if ((lat1 == lat2) && (lon1 == lon2)) {
             return 0.0;
