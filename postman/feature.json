@@ -1,0 +1,697 @@
+{
+	"info": {
+		"_postman_id": "30ccdb60-9c1b-4b89-8277-8db286b75681",
+		"name": "\"Explore with me \" API Локации",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26020491"
+	},
+	"item": [
+		{
+			"name": "Добавить новую локацию (админ)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function() {\r",
+							"    pm.response.to.be.success; // код ответа должен быть равен 200 OK\r",
+							"    pm.response.to.be.withBody; // ответ должен содержать тело\r",
+							"    pm.response.to.be.json; // и тело ответа должно быть в формате JSON\r",
+							"}); \r",
+							"\r",
+							"const source = JSON.parse(pm.request.body.raw);\r",
+							"const target = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Тело ответа должно содержать поля: id, name, lat, lon, rad, events\", function () {\r",
+							"    pm.expect(target).to.have.all.keys('id', 'name', 'lat', 'lon', 'rad', 'events');\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Данные в ответе должны соответствовать данным в запросе\", function () {\r",
+							"    pm.expect(target.id).to.not.be.null;\r",
+							"    pm.expect(source.name).equal(target.name, 'Название локации должно соответствовать отправленному в запросе');\r",
+							"    pm.expect(source.lat).equal(target.lat, 'Широта должна соответствовать отправленной в запросе');\r",
+							"    pm.expect(source.lon).equal(target.lon, 'Долгота должна соответствовать отправленной в запросе');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Senior JP Square\",\r\n    \"lat\": 56.42,\r\n    \"lon\": -12.0,\r\n    \"rad\": 100\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/admin/locations",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"locations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Добавить Приватного пользователя",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function() {\r",
+							"    pm.response.to.be.success; // код ответа должен быть равен 200 OK\r",
+							"    pm.response.to.be.withBody; // ответ должен содержать тело\r",
+							"    pm.response.to.be.json; // и тело ответа должно быть в формате JSON\r",
+							"}); \r",
+							"\r",
+							"const source = JSON.parse(pm.request.body.raw);\r",
+							"const target = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Тело ответа должно содержать поля: id, email, name\", function () {\r",
+							"    pm.expect(target).to.have.all.keys('id', \"email\", \"name\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Данные в ответе должны соответствовать данным в запросе\", function () {\r",
+							"    pm.expect(target.id).to.not.be.null;\r",
+							"    pm.expect(source.name).equal(target.name, 'Имя пользователя должно соответствовать отправленному в запросе');\r",
+							"    pm.expect(source.lat).equal(target.lat, 'Почта пользователя должна соответствовать отправленной в запросе');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\":\"zimablue@gmail.com\",\r\n    \"name\":\"zimablue\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/admin/users",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Добавить категорию для события",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function() {\r",
+							"    pm.response.to.be.success; // код ответа должен быть равен 200 OK\r",
+							"    pm.response.to.be.withBody; // ответ должен содержать тело\r",
+							"    pm.response.to.be.json; // и тело ответа должно быть в формате JSON\r",
+							"}); \r",
+							"\r",
+							"const source = JSON.parse(pm.request.body.raw);\r",
+							"const target = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Тело ответа должно содержать поля: id, name\", function () {\r",
+							"    pm.expect(target).to.have.all.keys('id', 'name');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Данные в ответе должны соответствовать данным в запросе\", function () {\r",
+							"    pm.expect(target.id).to.not.be.null;\r",
+							"    pm.expect(source.name).equal(target.name, 'Название категории должно соответствовать отправленному в запросе');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\":\"Demo name\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/admin/categories",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"categories"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Добавить событие, находящееся в радиусе существующей локации",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function() {\r",
+							"    pm.response.to.be.success; // код ответа должен быть равен 200 OK\r",
+							"    pm.response.to.be.withBody; // ответ должен содержать тело\r",
+							"    pm.response.to.be.json; // и тело ответа должно быть в формате JSON\r",
+							"}); \r",
+							"\r",
+							"const source = JSON.parse(pm.request.body.raw);\r",
+							"const target = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Тело ответа должно содержать поля: annotaion, category, confirmedRequests, createdOn, description, eventDate, id, initiator, location, paid, participantLimit, publishedOn, requestModeration, state, title, views\", function () {\r",
+							"    pm.expect(target).to.have.all.keys(\"annotation\", \"category\", \"confirmedRequests\", \"createdOn\", \"description\", \"eventDate\", \"id\", \"initiator\", \"location\", \"paid\", \"participantLimit\", \"publishedOn\", \"requestModeration\", \"state\", \"title\", \"views\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Данные в ответе должны соответствовать данным в запросе\", function () {\r",
+							"    pm.expect(target.id).to.not.be.null;\r",
+							"    pm.expect(source.title).equal(target.title, 'Заглавие события должно соответствовать отправленному в запросе');\r",
+							"        pm.expect(source.description).equal(target.description, 'Описание события должно соответствовать отправленному в запросе');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"annotation\": \"Demo annotaion for demo event\",\r\n    \"category\": 1,\r\n    \"description\": \"Demo description for demo event\",\r\n    \"eventDate\": \"2024-12-12 12:12:12\",\r\n    \"location\": {\r\n        \"lat\": 1,\r\n        \"lon\": 1\r\n    },\r\n    \"paid\": false,\r\n    \"participantLimit\": 0,\r\n    \"requestModeration\": false,\r\n    \"title\": \"Demo title\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/users/1/events",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users",
+						"1",
+						"events"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Получить локацию по айди (с событием)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function() {\r",
+							"    pm.response.to.be.success; // код ответа должен быть равен 200 OK\r",
+							"    pm.response.to.be.withBody; // ответ должен содержать тело\r",
+							"    pm.response.to.be.json; // и тело ответа должно быть в формате JSON\r",
+							"}); \r",
+							"\r",
+							"\r",
+							"const target = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Тело ответа должно содержать поля: id, name, lat, lon, rad, events\", function () {\r",
+							"    pm.expect(target).to.have.all.keys('id', 'name', 'lat', 'lon', 'rad', 'events');\r",
+							"    pm.expect(target.events).is.an('array');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Данные в ответе должны соответствовать данным в БД\", function () {\r",
+							"    pm.expect(target.id).to.not.be.null;\r",
+							"    pm.expect(target.name).equal(\"Senior JP Square\", 'Название локации должно соответствовать данным в БД');\r",
+							"    pm.expect(target.events).is.an('array');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/admin/locations/1",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"locations",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Добавить новую локацию (админ) с существующим событием в радиусе",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function() {\r",
+							"    pm.response.to.be.success; // код ответа должен быть равен 200 OK\r",
+							"    pm.response.to.be.withBody; // ответ должен содержать тело\r",
+							"    pm.response.to.be.json; // и тело ответа должно быть в формате JSON\r",
+							"}); \r",
+							"\r",
+							"const source = JSON.parse(pm.request.body.raw);\r",
+							"const target = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Тело ответа должно содержать поля: id, name, lat, lon, rad, events\", function () {\r",
+							"    pm.expect(target).to.have.all.keys('id', 'name', 'lat', 'lon', 'rad', 'events');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Данные в ответе должны соответствовать данным в БД\", function () {\r",
+							"    pm.expect(target.id).to.not.be.null;\r",
+							"    pm.expect(target.name).equal(\"Middle JP Square\", 'Название локации должно соответствовать данным в БД');\r",
+							"    pm.expect(target.events[0].title).equal(\"Demo title\", 'Заглавие события должно соответствовать данным в БД');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Middle JP Square\",\r\n    \"lat\": -1,\r\n    \"lon\": -1,\r\n    \"rad\": 10\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/admin/locations",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"locations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Добавить  событие, находящееся в радиусе одной из двух локаций",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function() {\r",
+							"    pm.response.to.be.success; // код ответа должен быть равен 200 OK\r",
+							"    pm.response.to.be.withBody; // ответ должен содержать тело\r",
+							"    pm.response.to.be.json; // и тело ответа должно быть в формате JSON\r",
+							"}); \r",
+							"\r",
+							"const source = JSON.parse(pm.request.body.raw);\r",
+							"const target = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Тело ответа должно содержать поля: annotaion, category, confirmedRequests, createdOn, description, eventDate, id, initiator, location, paid, participantLimit, publishedOn, requestModeration, state, title, views\", function () {\r",
+							"    pm.expect(target).to.have.all.keys(\"annotation\", \"category\", \"confirmedRequests\", \"createdOn\", \"description\", \"eventDate\", \"id\", \"initiator\", \"location\", \"paid\", \"participantLimit\", \"publishedOn\", \"requestModeration\", \"state\", \"title\", \"views\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Данные в ответе должны соответствовать данным в запросе\", function () {\r",
+							"    pm.expect(target.id).to.not.be.null;\r",
+							"    pm.expect(source.title).equal(target.title, 'Заглавие события должно соответствовать отправленному в запросе');\r",
+							"        pm.expect(source.description).equal(target.description, 'Описание события должно соответствовать отправленному в запросе');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"annotation\": \"Another Demo annotaion for demo event\",\r\n    \"category\": 1,\r\n    \"description\": \"Another Demo description for demo event\",\r\n    \"eventDate\": \"2024-12-12 12:12:12\",\r\n    \"location\": {\r\n        \"lat\": 50,\r\n        \"lon\": -12\r\n    },\r\n    \"paid\": false,\r\n    \"participantLimit\": 0,\r\n    \"requestModeration\": false,\r\n    \"title\": \"Another Demo title\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/users/1/events",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users",
+						"1",
+						"events"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Получить список всех локаций",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function() {\r",
+							"    pm.response.to.be.success; // код ответа должен быть равен 200 OK\r",
+							"    pm.response.to.be.withBody; // ответ должен содержать тело\r",
+							"    pm.response.to.be.json; // и тело ответа должно быть в формате JSON\r",
+							"}); \r",
+							"\r",
+							"\r",
+							"const target = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Тело ответа должно содержать поля: id, name, lat, lon, rad, events\", function () {\r",
+							"    pm.expect(target[0]).to.have.all.keys('id', 'name', 'lat', 'lon', 'rad', 'events');\r",
+							"    pm.expect(target[0].events).is.an('array');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Данные в ответе должны соответствовать данным в БД\", function () {\r",
+							"    pm.expect(target[0].id).equal(1);\r",
+							"    pm.expect(target[0].name).equal(\"Senior JP Square\", 'Название локации должно соответствовать данным в БД');\r",
+							"    pm.expect(target[0].events).is.an('array');\r",
+							"\r",
+							"    pm.expect(target[1].id).equal(2);\r",
+							"    pm.expect(target[1].name).equal(\"Middle JP Square\", 'Название локации должно соответствовать данным в БД');\r",
+							"    pm.expect(target[1].events).is.an('array');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/admin/locations",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"locations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Получить локацию по точным координатам",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function() {\r",
+							"    pm.response.to.be.success; // код ответа должен быть равен 200 OK\r",
+							"    pm.response.to.be.withBody; // ответ должен содержать тело\r",
+							"    pm.response.to.be.json; // и тело ответа должно быть в формате JSON\r",
+							"}); \r",
+							"\r",
+							"\r",
+							"const target = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Тело ответа должно содержать поля: id, name, lat, lon, rad, events\", function () {\r",
+							"    pm.expect(target).is.an('array');\r",
+							"    pm.expect(target[0]).to.have.all.keys('id', 'name', 'lat', 'lon', 'rad', 'events');\r",
+							"    pm.expect(target[0].events).is.an('array');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Данные в ответе должны соответствовать данным в БД\", function () {\r",
+							"    pm.expect(target[0].id).equal(1);\r",
+							"    pm.expect(target[0].name).equal(\"Senior JP Square\", 'Название локации должно соответствовать данным в БД');\r",
+							"    pm.expect(target[0].events).is.an('array');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/admin/locations?lat=56.42&lon=-12.0",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"locations"
+					],
+					"query": [
+						{
+							"key": "lat",
+							"value": "56.42"
+						},
+						{
+							"key": "lon",
+							"value": "-12.0"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Получить локации входящие в радиус",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function() {\r",
+							"    pm.response.to.be.success; // код ответа должен быть равен 200 OK\r",
+							"    pm.response.to.be.withBody; // ответ должен содержать тело\r",
+							"    pm.response.to.be.json; // и тело ответа должно быть в формате JSON\r",
+							"}); \r",
+							"\r",
+							"\r",
+							"const target = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Тело ответа должно содержать поля: id, name, lat, lon, rad, events\", function () {\r",
+							"    pm.expect(target).is.an('array');\r",
+							"    pm.expect(target[0]).to.have.all.keys('id', 'name', 'lat', 'lon', 'rad', 'events');\r",
+							"    pm.expect(target[0].events).is.an('array');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Данные в ответе должны соответствовать данным в БД\", function () {\r",
+							"    pm.expect(target[0].id).equal(1);\r",
+							"    pm.expect(target[0].name).equal(\"Senior JP Square\", 'Название локации должно соответствовать данным в БД');\r",
+							"\r",
+							"    pm.expect(target[1].id).equal(2);\r",
+							"    pm.expect(target[1].name).equal(\"Middle JP Square\", 'Название локации должно соответствовать данным в БД');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/admin/locations?lat=0&lon=0&rad=100",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"locations"
+					],
+					"query": [
+						{
+							"key": "lat",
+							"value": "0"
+						},
+						{
+							"key": "lon",
+							"value": "0"
+						},
+						{
+							"key": "rad",
+							"value": "100"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Получить ближайшую локацию в зоне поиска",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function() {\r",
+							"    pm.response.to.be.success; // код ответа должен быть равен 200 OK\r",
+							"    pm.response.to.be.withBody; // ответ должен содержать тело\r",
+							"    pm.response.to.be.json; // и тело ответа должно быть в формате JSON\r",
+							"}); \r",
+							"\r",
+							"\r",
+							"const target = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Тело ответа должно содержать поля: id, name, lat, lon, rad, events\", function () {\r",
+							"    pm.expect(target).is.an('array');\r",
+							"    pm.expect(target[0]).to.have.all.keys('id', 'name', 'lat', 'lon', 'rad', 'events');\r",
+							"    pm.expect(target[0].events).is.an('array');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Данные в ответе должны соответствовать данным в БД\", function () {\r",
+							"    pm.expect(target[0].id).equal(2);\r",
+							"    pm.expect(target[0].name).equal(\"Middle JP Square\", 'Название локации должно соответствовать данным в БД');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/admin/locations?lat=0&lon=0&rad=100&closest=true",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"locations"
+					],
+					"query": [
+						{
+							"key": "lat",
+							"value": "0"
+						},
+						{
+							"key": "lon",
+							"value": "0"
+						},
+						{
+							"key": "rad",
+							"value": "100"
+						},
+						{
+							"key": "closest",
+							"value": "true"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Обновить вторую локацию, что бы в неё входили оба события",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function() {\r",
+							"    pm.response.to.be.success; // код ответа должен быть равен 200 OK\r",
+							"    pm.response.to.be.withBody; // ответ должен содержать тело\r",
+							"    pm.response.to.be.json; // и тело ответа должно быть в формате JSON\r",
+							"}); \r",
+							"\r",
+							"const source = JSON.parse(pm.request.body.raw);\r",
+							"const target = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Тело ответа должно содержать поля: id, name, lat, lon, rad, events\", function () {\r",
+							"    pm.expect(target).to.have.all.keys('id', 'name', 'lat', 'lon', 'rad', 'events');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Данные в ответе должны соответствовать данным в БД\", function () {\r",
+							"    pm.expect(target.id).equal(2);\r",
+							"    pm.expect(target.name).equal(\"Middle JP Square\", 'Название локации должно соответствовать данным в БД');\r",
+							"    pm.expect(target.events).is.an('array');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Middle JP Square\",\r\n    \"lat\": 50,\r\n    \"lon\": -12,\r\n    \"rad\": 100\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/admin/locations/2",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"locations",
+						"2"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

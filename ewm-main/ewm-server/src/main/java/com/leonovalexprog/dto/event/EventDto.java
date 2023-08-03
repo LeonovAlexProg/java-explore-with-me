@@ -1,7 +1,7 @@
 package com.leonovalexprog.dto.event;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.leonovalexprog.dto.location.LocationDto;
+import com.leonovalexprog.dto.location.EventLocationDto;
 import com.leonovalexprog.dto.user.UserShortDto;
 import com.leonovalexprog.dto.category.CategoryDto;
 import com.leonovalexprog.model.Event;
@@ -27,7 +27,7 @@ public class EventDto {
     private LocalDateTime eventDate;
     private Long id;
     private UserShortDto initiator;
-    private LocationDto location;
+    private EventLocationDto location;
     private Boolean paid;
     private Long participantLimit;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")

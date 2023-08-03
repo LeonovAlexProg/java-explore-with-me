@@ -1,15 +1,27 @@
 package com.leonovalexprog.dto.location;
 
+import com.leonovalexprog.dto.event.EventShortDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 
-@Data
+import java.util.List;
+
 @Builder
-@RequiredArgsConstructor
+@Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class LocationDto {
+    private Long id;
+
+    private String name;
+
     private Float lat;
+
     private Float lon;
+
+    private Float rad;
+
+    private List<EventShortDto> events;
 }
