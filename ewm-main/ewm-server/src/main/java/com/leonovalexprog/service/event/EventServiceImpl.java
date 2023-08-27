@@ -12,6 +12,7 @@ import com.leonovalexprog.repository.CategoriesRepository;
 import com.leonovalexprog.repository.EventsRepository;
 import com.leonovalexprog.repository.LocationRepository;
 import com.leonovalexprog.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
@@ -19,7 +20,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
