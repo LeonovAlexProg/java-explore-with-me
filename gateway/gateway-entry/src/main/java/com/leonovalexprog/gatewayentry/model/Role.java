@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 
+import java.util.Collections;
 import java.util.Set;
 
 @Entity
@@ -20,10 +21,10 @@ public class Role implements GrantedAuthority {
     private String name;
     @Transient
     @ManyToMany(mappedBy = "roles")
-    private Set<User> users;
+    private Set<User> users = Collections.EMPTY_SET;
 
     @Override
     public String getAuthority() {
-        return null;
+        return name;
     }
 }
