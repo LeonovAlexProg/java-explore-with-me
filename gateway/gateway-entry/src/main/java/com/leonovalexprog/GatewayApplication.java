@@ -1,4 +1,4 @@
-package com.leonovalexprog.gatewayentry;
+package com.leonovalexprog;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

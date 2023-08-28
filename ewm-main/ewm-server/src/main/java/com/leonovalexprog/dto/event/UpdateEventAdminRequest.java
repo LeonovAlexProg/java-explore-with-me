@@ -8,8 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.lang.Nullable;
 
-import javax.validation.constraints.Future;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.Future;
 import java.time.LocalDateTime;
 
 @Data

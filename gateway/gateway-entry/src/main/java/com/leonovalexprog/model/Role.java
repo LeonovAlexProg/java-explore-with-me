@@ -1,4 +1,4 @@
-package com.leonovalexprog.gatewayentry.model;
+package com.leonovalexprog.model;
 
 import jakarta.persistence.*;
 import lombok.*;

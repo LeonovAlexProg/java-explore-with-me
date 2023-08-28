@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

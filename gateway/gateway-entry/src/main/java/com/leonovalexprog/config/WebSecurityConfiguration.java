@@ -1,4 +1,4 @@
-package com.leonovalexprog.gatewayentry.config;
+package com.leonovalexprog.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

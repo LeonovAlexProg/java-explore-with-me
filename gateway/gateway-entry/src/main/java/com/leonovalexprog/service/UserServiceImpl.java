@@ -1,13 +1,13 @@
-package com.leonovalexprog.gatewayentry.service;
+package com.leonovalexprog.service;
 
-import com.leonovalexprog.gatewayentry.dto.UserDto;
-import com.leonovalexprog.gatewayentry.dto.UserRegistrationDto;
-import com.leonovalexprog.gatewayentry.exception.exceptions.IncorrectPasswordException;
-import com.leonovalexprog.gatewayentry.exception.exceptions.UserExistsException;
-import com.leonovalexprog.gatewayentry.mapper.UserMapper;
-import com.leonovalexprog.gatewayentry.model.User;
-import com.leonovalexprog.gatewayentry.repository.RoleRepository;
-import com.leonovalexprog.gatewayentry.repository.UserRepository;
+import com.leonovalexprog.dto.UserDto;
+import com.leonovalexprog.dto.UserRegistrationDto;
+import com.leonovalexprog.exception.exceptions.IncorrectPasswordException;
+import com.leonovalexprog.exception.exceptions.UserExistsException;
+import com.leonovalexprog.mapper.UserMapper;
+import com.leonovalexprog.model.User;
+import com.leonovalexprog.repository.RoleRepository;
+import com.leonovalexprog.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.userdetails.UserDetails;

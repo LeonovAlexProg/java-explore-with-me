@@ -1,6 +1,5 @@
-package com.leonovalexprog.gatewayentry.dto;
+package com.leonovalexprog.dto;
 
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

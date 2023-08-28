@@ -1,4 +1,4 @@
-package com.leonovalexprog.gatewayentry.exception.exceptions;
+package com.leonovalexprog.exception.exceptions;
 
 public class IncorrectPasswordException extends RuntimeException {
     public IncorrectPasswordException(String message) {

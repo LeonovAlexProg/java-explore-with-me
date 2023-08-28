@@ -1,7 +1,7 @@
-package com.leonovalexprog.gatewayentry.exception;
+package com.leonovalexprog.exception;
 
-import com.leonovalexprog.gatewayentry.exception.exceptions.IncorrectPasswordException;
-import com.leonovalexprog.gatewayentry.exception.exceptions.UserExistsException;
+import com.leonovalexprog.exception.exceptions.IncorrectPasswordException;
+import com.leonovalexprog.exception.exceptions.UserExistsException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;

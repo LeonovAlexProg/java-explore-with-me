@@ -1,6 +1,6 @@
-package com.leonovalexprog.gatewayentry.repository;
+package com.leonovalexprog.repository;
 
-import com.leonovalexprog.gatewayentry.model.Role;
+import com.leonovalexprog.model.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface RoleRepository extends JpaRepository<Role, Long> {

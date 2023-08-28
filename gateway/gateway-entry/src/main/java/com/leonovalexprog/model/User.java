@@ -1,11 +1,9 @@
-package com.leonovalexprog.gatewayentry.model;
+package com.leonovalexprog.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Controller;
 
 import java.util.Collection;
 import java.util.Set;

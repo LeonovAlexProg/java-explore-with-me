@@ -1,11 +1,10 @@
-package com.leonovalexprog.gatewayentry.controller;
+package com.leonovalexprog.controller;
 
-import com.leonovalexprog.gatewayentry.dto.UserDto;
-import com.leonovalexprog.gatewayentry.dto.UserRegistrationDto;
-import com.leonovalexprog.gatewayentry.service.UserServiceImpl;
+import com.leonovalexprog.dto.UserDto;
+import com.leonovalexprog.dto.UserRegistrationDto;
+import com.leonovalexprog.service.UserServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;

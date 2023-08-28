@@ -1,4 +1,4 @@
-package com.leonovalexprog.gatewayentry.exception;
+package com.leonovalexprog.exception;
 
 import lombok.Data;
 

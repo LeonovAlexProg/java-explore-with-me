@@ -2,7 +2,7 @@ package com.leonovalexprog.model;
 
 import lombok.*;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity

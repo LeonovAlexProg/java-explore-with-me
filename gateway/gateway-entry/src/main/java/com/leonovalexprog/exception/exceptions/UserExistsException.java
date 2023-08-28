@@ -1,4 +1,4 @@
-package com.leonovalexprog.gatewayentry.exception.exceptions;
+package com.leonovalexprog.exception.exceptions;
 
 public class UserExistsException extends RuntimeException {
     public UserExistsException(String message) {
